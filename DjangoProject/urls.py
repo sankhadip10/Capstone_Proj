@@ -16,17 +16,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import say_hello,say_hello_with_name
-from .views import users,get_or_update_or_delete_user
-
+# from .views import say_hello,say_hello_with_name
+# from .views import users,get_or_update_or_delete_user
+# from .views.better_views import UserListCreateApiView,UserRetrieveUpdateDestroyApiView
+from .views.custom_api_views import UserListCreateApiView
 urlpatterns = [
-    path('',say_hello),
-    path('say_hello/<name>',say_hello_with_name),
+    # path('',say_hello),
+    # path('',UserListCreateApiView.as_view()),
+    # path('say_hello/<name>',say_hello_with_name),
+    # path('say_hello/<name>',UserListCreateApiView.as_view()),
 
     # path('users/', UserListCreateAPIView.as_view()),
+    path('users/', UserListCreateApiView.as_view()),
     path('admin/', admin.site.urls),
 
-    path('users/',users),
-    path('users/<id>',get_or_update_or_delete_user),
+    # path('users/',users),
+    # path('users/',UserListCreateApiView.as_view()),
+    # path('users/<id>',get_or_update_or_delete_user),
+    # path('users/<id>',UserListCreateApiView.as_view()),
+    # path('users/<id>/',UserRetrieveUpdateDestroyApiView.as_view()),
 
 ]
