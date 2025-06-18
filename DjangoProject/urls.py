@@ -19,7 +19,9 @@ from django.urls import path
 # from .views import say_hello,say_hello_with_name
 # from .views import users,get_or_update_or_delete_user
 # from .views.better_views import UserListCreateApiView,UserRetrieveUpdateDestroyApiView
-from .views.custom_api_views import UserListCreateApiView
+# from .views.custom_api_views import UserListCreateApiView
+from .views import ListCreateProductAPIView, DairyListCreateAPIView, DairyRetrieveUpdateDestroyAPIView
+
 urlpatterns = [
     # path('',say_hello),
     # path('',UserListCreateApiView.as_view()),
@@ -27,7 +29,10 @@ urlpatterns = [
     # path('say_hello/<name>',UserListCreateApiView.as_view()),
 
     # path('users/', UserListCreateAPIView.as_view()),
-    path('users/', UserListCreateApiView.as_view()),
+    # path('users/', UserListCreateApiView.as_view()),
+    path('', ListCreateProductAPIView.as_view()),
+    path('dairy/', DairyListCreateAPIView.as_view()),
+    path('dairy/<int:pk>/', DairyRetrieveUpdateDestroyAPIView.as_view()),
     path('admin/', admin.site.urls),
 
     # path('users/',users),
