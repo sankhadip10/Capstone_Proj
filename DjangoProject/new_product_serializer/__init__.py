@@ -1,1 +1,2 @@
 from .new_product_serializer import NewProductSerializer,DairyProductSerializer
+from .flipkart_serializer import FlipkartUserSerializer,ShippingAddressSerializer,CreateShippingAddressSerializer,UserSerializer

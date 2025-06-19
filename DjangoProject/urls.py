@@ -20,8 +20,8 @@ from django.urls import path
 # from .views import users,get_or_update_or_delete_user
 # from .views.better_views import UserListCreateApiView,UserRetrieveUpdateDestroyApiView
 # from .views.custom_api_views import UserListCreateApiView
-from .views import ListCreateProductAPIView, DairyListCreateAPIView, DairyRetrieveUpdateDestroyAPIView
-
+# from .views import ListCreateProductAPIView, DairyListCreateAPIView, DairyRetrieveUpdateDestroyAPIView
+from  .views.flipkart_views import UserListCreateAPIView,UserRetrieveUpdateDestroyAPIView,ShippingAddressListCreateAPIView
 urlpatterns = [
     # path('',say_hello),
     # path('',UserListCreateApiView.as_view()),
@@ -30,9 +30,14 @@ urlpatterns = [
 
     # path('users/', UserListCreateAPIView.as_view()),
     # path('users/', UserListCreateApiView.as_view()),
-    path('', ListCreateProductAPIView.as_view()),
-    path('dairy/', DairyListCreateAPIView.as_view()),
-    path('dairy/<int:pk>/', DairyRetrieveUpdateDestroyAPIView.as_view()),
+    # path('', ListCreateProductAPIView.as_view()),
+    # path('dairy/', DairyListCreateAPIView.as_view()),
+    # path('dairy/<int:pk>/', DairyRetrieveUpdateDestroyAPIView.as_view()),
+
+    #flipkart
+    path('user/', UserListCreateAPIView.as_view()),
+    path('user/<int:pk>/', UserRetrieveUpdateDestroyAPIView.as_view()),
+    path("user/<int:user_id>/shipping/", ShippingAddressListCreateAPIView.as_view()),
     path('admin/', admin.site.urls),
 
     # path('users/',users),
