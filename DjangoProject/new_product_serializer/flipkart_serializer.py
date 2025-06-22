@@ -18,6 +18,7 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     shipping_addresses = ShippingAddressSerializer(many=True)
+    default_shipping_address = ShippingAddressSerializer(read_only=True)
 
     class Meta:
         model = UserFlipkart

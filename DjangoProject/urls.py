@@ -14,8 +14,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import debug_toolbar
 from django.contrib import admin
 from django.urls import path
+from django.urls import include, path
+
+from . import settings
 # from .views import say_hello,say_hello_with_name
 # from .views import users,get_or_update_or_delete_user
 # from .views.better_views import UserListCreateApiView,UserRetrieveUpdateDestroyApiView
@@ -47,3 +51,7 @@ urlpatterns = [
     # path('users/<id>/',UserRetrieveUpdateDestroyApiView.as_view()),
 
 ]
+if settings.DEBUG:
+    urlpatterns += [
+        path("__debug__/", include(debug_toolbar.urls)),
+    ]
