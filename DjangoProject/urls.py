@@ -18,14 +18,19 @@ import debug_toolbar
 from django.contrib import admin
 from django.urls import path
 from django.urls import include, path
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 from . import settings
 # from .views import say_hello,say_hello_with_name
 # from .views import users,get_or_update_or_delete_user
 # from .views.better_views import UserListCreateApiView,UserRetrieveUpdateDestroyApiView
 # from .views.custom_api_views import UserListCreateApiView
 # from .views import ListCreateProductAPIView, DairyListCreateAPIView, DairyRetrieveUpdateDestroyAPIView
-from  .views.flipkart_views import UserListCreateAPIView,UserRetrieveUpdateDestroyAPIView,ShippingAddressListCreateAPIView
+# from  .views.flipkart_views import UserListCreateAPIView,UserRetrieveUpdateDestroyAPIView,ShippingAddressListCreateAPIView
+from DjangoProject.my_views import ProductListCreateAPIView
+
 urlpatterns = [
     # path('',say_hello),
     # path('',UserListCreateApiView.as_view()),
@@ -39,9 +44,13 @@ urlpatterns = [
     # path('dairy/<int:pk>/', DairyRetrieveUpdateDestroyAPIView.as_view()),
 
     #flipkart
-    path('user/', UserListCreateAPIView.as_view()),
-    path('user/<int:pk>/', UserRetrieveUpdateDestroyAPIView.as_view()),
-    path("user/<int:user_id>/shipping/", ShippingAddressListCreateAPIView.as_view()),
+    # path('user/', UserListCreateAPIView.as_view()),
+    # path('user/<int:pk>/', UserRetrieveUpdateDestroyAPIView.as_view()),
+    # path("user/<int:user_id>/shipping/", ShippingAddressListCreateAPIView.as_view()),
+    #flipkart
+
+    #middleware
+    # path('',say_hello_to),
     path('admin/', admin.site.urls),
 
     # path('users/',users),
@@ -49,6 +58,10 @@ urlpatterns = [
     # path('users/<id>',get_or_update_or_delete_user),
     # path('users/<id>',UserListCreateApiView.as_view()),
     # path('users/<id>/',UserRetrieveUpdateDestroyApiView.as_view()),
+    #django_simple_jwt
+    path('products/',ProductListCreateAPIView.as_view()),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 ]
 if settings.DEBUG:
