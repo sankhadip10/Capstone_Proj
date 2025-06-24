@@ -30,6 +30,7 @@ from . import settings
 # from .views import ListCreateProductAPIView, DairyListCreateAPIView, DairyRetrieveUpdateDestroyAPIView
 # from  .views.flipkart_views import UserListCreateAPIView,UserRetrieveUpdateDestroyAPIView,ShippingAddressListCreateAPIView
 from DjangoProject.my_views import ProductListCreateAPIView
+# from .views.web_hook_views import webhook
 
 urlpatterns = [
     # path('',say_hello),
@@ -62,6 +63,9 @@ urlpatterns = [
     path('products/',ProductListCreateAPIView.as_view()),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    #web_hook_view
+    # path('webhook/',webhook),
 
 ]
 if settings.DEBUG:
