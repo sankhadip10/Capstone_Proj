@@ -1,4 +1,0 @@
-from .say_hello import say_hello,say_hello_with_name,users,get_or_update_or_delete_user
-from .better_views import UserListCreateApiView,UserRetrieveUpdateDestroyApiView
-from .new_product_views import ListCreateProductAPIView,DairyListCreateAPIView,DairyRetrieveUpdateDestroyAPIView
-from .flipkart_views import ShippingAddressListCreateAPIView
