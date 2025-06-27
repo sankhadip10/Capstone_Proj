@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.db.models import Q, F,Value,Func
+from django.db.models import Q, F, Value, Func, Count, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
 from django.db.models import Count,Max,Min,Avg,Sum
+from django.contrib.contenttypes.models import ContentType
 from store.models import Product, OrderItem, Order, Customer
+from tags.models import TaggedItem
 
 
 # Create your views here.
@@ -70,9 +72,38 @@ def say_hello(request):
     #     full_name=Func(F('first_name'),Value(' '),F('last_name'),function='CONCAT')
     # )
 
-    queryset=Customer.objects.annotate(
-        full_name=Concat('first_name',Value(' '),'last_name')
-    )
+    # queryset=Customer.objects.annotate(
+    #     full_name=Concat('first_name',Value(' '),'last_name')
+    # )
+
+    #no of orders each customers has used
+    # queryset = Customer.objects.annotate(
+    #     orders_count=Count('order')
+    # )
+
+    #Expression Wrapper
+    # discounted_price = ExpressionWrapper(
+    #     F('unit_price') * 0.8, output_field=DecimalField()
+    # )
+    #
+    # queryset = Product.objects.annotate(
+    #     discounted_price=discounted_price
+    # )
+
+    #tagged Item
+    # content_type = ContentType.objects.get_for_model(Product)
+    #
+    # queryset=TaggedItem.objects \
+    #     .select_related('tag') \
+    #     .filter(
+    #         content_type=content_type,
+    #         object_id=1
+    # )
+
+    #in much easier way to implement the above
+    TaggedItem.objects.get_tags_for(Product,1)
+
     # return render(request, 'hello.html', {'name': 'Sankha', 'orders': list(querry_set)})
     # return render(request, 'hello.html', {'name': 'Sankha', 'result': result})
-    return render(request, 'hello.html', {'name': 'Sankha', 'result': list(queryset)})
+    # return render(request, 'hello.html', {'name': 'Sankha', 'result': list(queryset)})
+    return render(request,'hello.html',{'name':'Sankha','tags':list(queryset)})
