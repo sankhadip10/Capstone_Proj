@@ -1,10 +1,11 @@
+from django.db import transaction
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Q, F, Value, Func, Count, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
 from django.db.models import Count,Max,Min,Avg,Sum
 from django.contrib.contenttypes.models import ContentType
-from store.models import Product, OrderItem, Order, Customer
+from store.models import Product, OrderItem, Order, Customer, Collection
 from tags.models import TaggedItem
 
 
@@ -101,9 +102,62 @@ def say_hello(request):
     # )
 
     #in much easier way to implement the above
-    TaggedItem.objects.get_tags_for(Product,1)
+    # TaggedItem.objects.get_tags_for(Product,1)
+
+    #querry set cache
+    # queryset = Product.objects.all()
+    # list(queryset)
+    # queryset[0]
+
+    #insert a record into database
+    # collection = Collection()
+    # # collection = Collection(title='Video Games')
+    # collection.title = 'Video Games'
+    # # collection.featured_product = Product(pk=1)
+    # collection.featured_product_id = 1
+    # collection.save()
+
+    #update the product
+    # collection = Collection.objects.get(pk=11)
+    # # collection = Collection(title='Video Games')
+    # collection.title = 'Games'
+    # # collection.featured_product = Product(pk=1)
+    # collection.featured_product_id = None
+    # collection.save()
+
+    # Collection.objects.filter(pk=11).update(featured_product_id=None)
+
+    #another to write code
+    # Collection.objects.create(name='a',featured_product=1)
+
+
+    # collection = Collection(pk=11)
+    # collection.delete()
+    #
+    # collection.objects.filter(id__gt=5).delete()
+
 
     # return render(request, 'hello.html', {'name': 'Sankha', 'orders': list(querry_set)})
     # return render(request, 'hello.html', {'name': 'Sankha', 'result': result})
     # return render(request, 'hello.html', {'name': 'Sankha', 'result': list(queryset)})
-    return render(request,'hello.html',{'name':'Sankha','tags':list(queryset)})
+    # return render(request,'hello.html',{'name':'Sankha','tags':list(queryset)})
+    return render(request,'hello.html',{'name':'Sankha'})
+
+
+#example for transaction
+# @transaction.atomic()
+def say_hello(request):
+
+    with transaction.atomic():
+        order = Order()
+        order.customer_id = 1
+        order.save()
+
+        item =OrderItem()
+        item.order = order
+        item.product_id = 1
+        item.quantity = 1
+        item.unit_price = 10
+
+    return render(request,'hello.html',{'name':'Sankha'})
+
