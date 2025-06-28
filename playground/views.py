@@ -1,4 +1,4 @@
-from django.db import transaction
+from django.db import transaction, connection
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Q, F, Value, Func, Count, ExpressionWrapper, DecimalField
@@ -136,28 +136,37 @@ def say_hello(request):
     #
     # collection.objects.filter(id__gt=5).delete()
 
+    #raw query set
+    # queryset=Product.objects.raw('SELECT id,title FROM store_product')
+
+    #by passing model layer
+    # with connection.cursor() as cursor:
+    # cursor=connection.cursor()
+    #     cursor.execute("select * from product")
+    #     cursor.callproc("get_customers",[1,2,'a'])
+    # cursor.close()
 
     # return render(request, 'hello.html', {'name': 'Sankha', 'orders': list(querry_set)})
     # return render(request, 'hello.html', {'name': 'Sankha', 'result': result})
     # return render(request, 'hello.html', {'name': 'Sankha', 'result': list(queryset)})
     # return render(request,'hello.html',{'name':'Sankha','tags':list(queryset)})
-    return render(request,'hello.html',{'name':'Sankha'})
+    return render(request,'hello.html',{'name':'Sankha','result':list(queryset)})
 
 
 #example for transaction
 # @transaction.atomic()
-def say_hello(request):
-
-    with transaction.atomic():
-        order = Order()
-        order.customer_id = 1
-        order.save()
-
-        item =OrderItem()
-        item.order = order
-        item.product_id = 1
-        item.quantity = 1
-        item.unit_price = 10
-
-    return render(request,'hello.html',{'name':'Sankha'})
-
+# def say_hello(request):
+#
+#     with transaction.atomic():
+#         order = Order()
+#         order.customer_id = 1
+#         order.save()
+#
+#         item =OrderItem()
+#         item.order = order
+#         item.product_id = 1
+#         item.quantity = 1
+#         item.unit_price = 10
+#
+#     return render(request,'hello.html',{'name':'Sankha'})
+#
