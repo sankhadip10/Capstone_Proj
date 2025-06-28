@@ -59,28 +59,6 @@ class ProductAdmin(admin.ModelAdmin):
             messages.ERROR
         )
 
-
-@admin.register(models.Customer)
-class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name','membership']
-    list_editable = ['membership']
-    list_per_page = 10
-    ordering = ['first_name','last_name']
-    search_fields = ['first_name__istartswith','last_name__istartswith']
-
-class OrderItemInline(admin.TabularInline):
-    autocomplete_fields = ['product']
-    min_num = 1
-    max_num = 10
-    model = models.OrderItem
-    extra = 0
-
-@admin.register(models.Order)
-class OrderAdmin(admin.ModelAdmin):
-    autocomplete_fields = ['customer']
-    inlines = [OrderItemInline]
-    list_display = ['id','placed_at','customer']
-
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
     # autocomplete_fields = ['featured_product']
@@ -102,5 +80,46 @@ class CollectionAdmin(admin.ModelAdmin):
         return super().get_queryset(request).annotate(
             products_count=Count('product')
         )
+
+
+@admin.register(models.Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name',  'membership', 'orders']
+    list_editable = ['membership']
+    list_per_page = 10
+    ordering = ['first_name', 'last_name']
+    search_fields = ['first_name__istartswith', 'last_name__istartswith']
+
+    @admin.display(ordering='orders_count')
+    def orders(self, customer):
+        url = (
+            reverse('admin:store_order_changelist')
+            + '?'
+            + urlencode({
+                'customer__id': str(customer.id)
+            }))
+        return format_html('<a href="{}">{} Orders</a>', url, customer.orders_count)
+
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(
+            orders_count=Count('order')
+        )
+
+
+class OrderItemInline(admin.TabularInline):
+    autocomplete_fields = ['product']
+    min_num = 1
+    max_num = 10
+    model = models.OrderItem
+    extra = 0
+
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['customer']
+    inlines = [OrderItemInline]
+    list_display = ['id','placed_at','customer']
+
+
 
 # admin.site.register(models.Product,ProductAdmin)

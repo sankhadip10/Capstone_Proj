@@ -10,7 +10,7 @@ from tags.models import TaggedItem
 
 
 # Create your views here.
-def say_hello(request):
+# def say_hello(request):
     # return HttpResponse("Hello World!")
     # querry_set = Product.objects.filter(unit_price__range=(20,30))
     # querry_set = Product.objects.filter(collection__id__range=(1,2,3))
@@ -150,7 +150,7 @@ def say_hello(request):
     # return render(request, 'hello.html', {'name': 'Sankha', 'result': result})
     # return render(request, 'hello.html', {'name': 'Sankha', 'result': list(queryset)})
     # return render(request,'hello.html',{'name':'Sankha','tags':list(queryset)})
-    return render(request,'hello.html',{'name':'Sankha','result':list(queryset)})
+    # return render(request,'hello.html',{'name':'Sankha','result':list(queryset)})
 
 
 #example for transaction
@@ -169,4 +169,7 @@ def say_hello(request):
 #         item.unit_price = 10
 #
 #     return render(request,'hello.html',{'name':'Sankha'})
-#
+
+def say_hello(request):
+    return render(request, 'hello.html', {'name': 'Mosh'})
+
