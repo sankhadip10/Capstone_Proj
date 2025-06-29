@@ -30,7 +30,7 @@ class Product(models.Model):
     )
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
-    collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
+    collection = models.ForeignKey(Collection, on_delete=models.PROTECT,related_name='products')
     promotions = models.ManyToManyField(Promotion,blank=True)
 
     def __str__(self) -> str:
@@ -83,7 +83,7 @@ class OrderItem(models.Model):
     # orderitem_set
     # order = models.ForeignKey(Order, on_delete=models.PROTECT,related_name='items')
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT,related_name='orderitems')
     quantity = models.PositiveSmallIntegerField()
     unit_price = models.DecimalField(decimal_places=2, max_digits=6)
 
