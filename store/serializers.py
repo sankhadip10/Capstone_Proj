@@ -64,3 +64,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         # You passed this context from the view using get_serializer_context()
         product_id = self.context['product_id']
         return Review.objects.create(product_id=product_id, **validated_data)
+
+
+
