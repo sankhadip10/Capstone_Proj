@@ -1,6 +1,8 @@
 from decimal import Decimal
 from rest_framework import serializers
-from store.models import Product, Collection
+
+from store.models import Product, Collection, Review
+
 
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,14 +13,17 @@ class CollectionSerializer(serializers.ModelSerializer):
     # id = serializers.IntegerField()
     # title = serializers.CharField(max_length=255)
 
+
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'title','description','slug','inventory', 'unit_price','price_wih_tax','collection']
+        fields = ['id', 'title', 'description', 'slug', 'inventory', 'unit_price', 'price_wih_tax', 'collection']
+
     # id = serializers.IntegerField()
     # title = serializers.CharField(max_length=255)
     # price = serializers.DecimalField(max_digits=6,decimal_places=2,source='unit_price')
     price_wih_tax = serializers.SerializerMethodField(method_name='calculate_tax')
+
     # collection = serializers.PrimaryKeyRelatedField(
     #     queryset=Collection.objects.all()
     # )
@@ -30,7 +35,7 @@ class ProductSerializer(serializers.ModelSerializer):
     #     view_name='collection-detail'
     # )
 
-    def calculate_tax(self, product:Product):
+    def calculate_tax(self, product: Product):
         return product.unit_price * Decimal(1.1)
 
     # def create(self, validated_data):
@@ -50,3 +55,12 @@ class ProductSerializer(serializers.ModelSerializer):
     #     return data
 
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id', 'date', 'name', 'description']
+
+    def create(self, validated_data):
+        # You passed this context from the view using get_serializer_context()
+        product_id = self.context['product_id']
+        return Review.objects.create(product_id=product_id, **validated_data)
