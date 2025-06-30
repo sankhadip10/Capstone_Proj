@@ -118,10 +118,12 @@ class AddCartItemSerializer(serializers.ModelSerializer):
 
         return self.instance
 
-
-
-
     class Meta:
         model = CartItem
         fields = ['id','product_id','quantity']
+
+class UpdateCartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['quantity']
 
