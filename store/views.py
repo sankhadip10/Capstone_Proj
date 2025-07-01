@@ -5,7 +5,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, UpdateModelMixin
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, DjangoModelPermissions, \
+    DjangoModelPermissionsOrAnonReadOnly
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.decorators import api_view
@@ -17,6 +18,7 @@ from rest_framework import status
 from .filters import ProductFilter
 from .models import Product, Collection, OrderItem, Review, Cart, CartItem, Customer
 from .pagination import DefaultPagination
+from .permissions import IsAdminOrReadOnly, FullDjangoModelPermissions
 from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, CartItemSerializer, \
     AddCartItemSerializer, UpdateCartItemSerializer, CustomerSerializer
 
@@ -29,6 +31,7 @@ class ProductViewSet(ModelViewSet):
     filterset_class = ProductFilter
     pagination_class = DefaultPagination
     search_fields = ['title', 'description']
+    permission_classes = [IsAdminOrReadOnly]
     ordering_fields = ['unit_price','last_update']
 
     #collection base on collection id
@@ -158,6 +161,7 @@ class ProductViewSet(ModelViewSet):
 class CollectionViewSet(ModelViewSet):
     queryset =Collection.objects.annotate(products_count=Count('products')).all()
     serializer_class = CollectionSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def destroy(self, request, *args, **kwargs):
         collection = get_object_or_404(Collection, pk=kwargs['pk'])
@@ -265,17 +269,20 @@ class CartItemViewSet(ModelViewSet):
                 .filter(cart_id=self.kwargs['cart_pk']) \
                 .select_related('product')
 
-class CustomerViewSet(CreateModelMixin,RetrieveModelMixin,UpdateModelMixin,GenericViewSet):
+class CustomerViewSet(ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAdminUser]
+    # permission_classes = [DjangoModelPermissions]
+    permission_classes = [FullDjangoModelPermissions]
+    # permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
 
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [AllowAny()]
-        return [IsAuthenticated()]
+    # def get_permissions(self):
+    #     if self.request.method == 'GET':
+    #         return [AllowAny()]
+    #     return [IsAuthenticated()]
 
-    @action(detail=False,methods=['GET','PUT'])
+    @action(detail=False,methods=['GET','PUT'],permission_classes=[IsAuthenticated])
     def me(self,request):
         (customer,created)=Customer.objects.get_or_create(user_id=request.user.id)
         if request.method == 'GET':
