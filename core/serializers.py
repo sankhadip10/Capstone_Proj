@@ -3,9 +3,13 @@ from rest_framework import serializers
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
-    birth_date = serializers.DateField()
+    # def save(self, **kwargs):
+    #     user = super().save(**kwargs)
+    #     Customer.objects.create(user=user)
+    #
+    # birth_date = serializers.DateField()
     class Meta(BaseUserCreateSerializer.Meta):
-        fields = ['id', 'username','password', 'email','first_name','last_name','birth_date']
+        fields = ['id', 'username','password', 'email','first_name','last_name']
 
 
 class UserSerializer(BaseUserSerializer):
