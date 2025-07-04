@@ -1,10 +1,13 @@
+from django.core.mail import send_mail,mail_admins,BadHeaderError,EmailMessage
+from templated_mail.mail import BaseEmailMessage
 from django.db import transaction, connection
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.db.models import Q, F, Value, Func, Count, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
 from django.db.models import Count,Max,Min,Avg,Sum
 from django.contrib.contenttypes.models import ContentType
+from pyexpat.errors import messages
+
 from store.models import Product, OrderItem, Order, Customer, Collection
 from tags.models import TaggedItem
 
@@ -171,5 +174,22 @@ from tags.models import TaggedItem
 #     return render(request,'hello.html',{'name':'Sankha'})
 
 def say_hello(request):
+    try:
+
+        # send_mail('subject','message','ricky.das@gmail.com',['ram@gmail.com'])
+
+        # mail_admins('subject','message',html_message='message')
+
+        # message = EmailMessage('subject','message','email@email.com',['laxman@email.com'])
+        # message.attach_file('playground/static/images/dog.jpg')
+        # message.send()
+
+        message =BaseEmailMessage(
+            template_name='emails/hello.html',
+            context={'name':'Sankha'}
+        )
+        message.send(['john@email.com'])
+    except BadHeaderError:
+        pass
     return render(request, 'hello.html', {'name': 'Mosh'})
 
