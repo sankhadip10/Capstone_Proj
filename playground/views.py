@@ -8,6 +8,7 @@ from django.db.models import Count,Max,Min,Avg,Sum
 from django.contrib.contenttypes.models import ContentType
 from pyexpat.errors import messages
 
+from playground.tasks import notify_customer
 from store.models import Product, OrderItem, Order, Customer, Collection
 from tags.models import TaggedItem
 
@@ -174,7 +175,7 @@ from tags.models import TaggedItem
 #     return render(request,'hello.html',{'name':'Sankha'})
 
 def say_hello(request):
-    try:
+    # try:
 
         # send_mail('subject','message','ricky.das@gmail.com',['ram@gmail.com'])
 
@@ -184,12 +185,16 @@ def say_hello(request):
         # message.attach_file('playground/static/images/dog.jpg')
         # message.send()
 
-        message =BaseEmailMessage(
-            template_name='emails/hello.html',
-            context={'name':'Sankha'}
-        )
-        message.send(['john@email.com'])
-    except BadHeaderError:
-        pass
-    return render(request, 'hello.html', {'name': 'Mosh'})
+    #--------------------------------------------------------------------------
+    #     message =BaseEmailMessage(
+    #         template_name='emails/hello.html',
+    #         context={'name':'Sankha'}
+    #     )
+    #     message.send(['john@email.com'])
+    # except BadHeaderError:
+    #     pass
+    # return render(request, 'hello.html', {'name': 'Mosh'})
+#---------------------------------------------------------------------------
+    notify_customer.delay('Hello')
+    return render(request, 'hello.html', {'name': 'sankhadip'})
 
