@@ -195,6 +195,7 @@ def say_hello(request):
     #     pass
     # return render(request, 'hello.html', {'name': 'Mosh'})
 #---------------------------------------------------------------------------
-    notify_customer.delay('Hello')
+    # notify_customer.delay('Hello')
+
     return render(request, 'hello.html', {'name': 'sankhadip'})
 
