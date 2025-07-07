@@ -1,4 +1,10 @@
+import logging
+import requests
+from django.core.cache import cache
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.core.mail import send_mail,mail_admins,BadHeaderError,EmailMessage
+from rest_framework.views import APIView
 from templated_mail.mail import BaseEmailMessage
 from django.db import transaction, connection
 from django.shortcuts import render
@@ -174,7 +180,7 @@ from tags.models import TaggedItem
 #
 #     return render(request,'hello.html',{'name':'Sankha'})
 
-def say_hello(request):
+# def say_hello(request):
     # try:
 
         # send_mail('subject','message','ricky.das@gmail.com',['ram@gmail.com'])
@@ -196,6 +202,31 @@ def say_hello(request):
     # return render(request, 'hello.html', {'name': 'Mosh'})
 #---------------------------------------------------------------------------
     # notify_customer.delay('Hello')
+    # return render(request, 'hello.html', {'name': 'sankhadip'})
+#------------------------------------------------------------------------------------
+#redis
+# @cache_page(5*60)
+# def say_hello(request):
+#     # key = 'httpbin_result'
+#     # if cache.get(key) is None:
+#     response = requests.get('https://httpbin.org/delay/2')
+#     data = response.json()
+#         # cache.set(key, data)
+#
+#     # return render(request, 'hello.html', {'name': cache.get(key)})
+#     return render(request, 'hello.html', {'name': data})
 
-    return render(request, 'hello.html', {'name': 'sankhadip'})
+logger = logging.getLogger(__name__)
 
+#class base view
+class HelloView(APIView):
+    @method_decorator(cache_page(5*60))
+    def get(self,request):
+        try:
+            logger.info('Calling httpbin')
+            response = requests.get('https://httpbin.org/delay/2')
+            logger.info('Response from httpbin')
+            data = response.json()
+        except requests.ConnectionError:
+            logger.critical('http is offline ')
+        return render(request,'hello.html',{'name':'Sankha'})
