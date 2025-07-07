@@ -3,13 +3,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE-edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Online Store - Backend API</title>
     <link rel="stylesheet" href="{% static 'core/styles.css' %}">
 </head>
 <body>
- <div class="home-page"></div>
- <img src="{% static 'core/logo.svg' %}" alt="Logo" class="logo">
+    <div class="container">
+        <h1>🛍️ Online Store - Backend API</h1>
+        <p class="subtitle">Capstone project showcasing backend features for an eCommerce platform.</p>
+
+        <section>
+            <h2>📦 Product Management</h2>
+            <ul>
+                <li><a href="/store/products/" target="_blank">/store/products/</a> – List & Create Products</li>
+                <li><a href="/store/products/1/" target="_blank">/store/products/&lt;id&gt;/</a> – View, Update, Delete Product</li>
+                <li><a href="/store/products/1/reviews/" target="_blank">/store/products/&lt;product_id&gt;/reviews/</a> – Product Reviews</li>
+                <li><a href="/store/products/1/images/" target="_blank">/store/products/&lt;product_id&gt;/images/</a> – Product Images</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>📁 Collection Management</h2>
+            <ul>
+                <li><a href="/store/collections/" target="_blank">/store/collections/</a> – List & Create Collections</li>
+                <li><a href="/store/collections/1/" target="_blank">/store/collections/&lt;id&gt;/</a> – View a Collection</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>🛒 Cart Management</h2>
+            <ul>
+                <li><a href="/store/carts/" target="_blank">/store/carts/</a> – Create a Cart</li>
+                <li><a href="/store/carts/your-cart-id/items/" target="_blank">/store/carts/&lt;cart_id&gt;/items/</a> – Add/View Items</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>👤 Customer Management</h2>
+            <ul>
+                <li><a href="/store/customers/" target="_blank">/store/customers/</a> – View & Edit Customer</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>🧾 Order Management</h2>
+            <ul>
+                <li><a href="/store/orders/" target="_blank">/store/orders/</a> – Place/View Orders</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>🔐 Authentication</h2>
+            <ul>
+                <li><a href="/auth/users/" target="_blank">/auth/users/</a> – Register</li>
+                <li><a href="/auth/jwt/create/" target="_blank">/auth/jwt/create/</a> – Login</li>
+                <li><a href="/auth/jwt/refresh/" target="_blank">/auth/jwt/refresh/</a> – Refresh Token</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>⚙️ Admin & Tools</h2>
+            <ul>
+                <li><a href="/admin/" target="_blank">/admin/</a> – Admin Panel (username: <code>admin</code>, password: <code>1122334455</code>)</li>
+                <li><a href="/__debug__/" target="_blank">/__debug__/</a> – Debug Toolbar</li>
+                <li><a href="/silk/" target="_blank">/silk/</a> – Silk Profiler</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>🚀 Developed by Sankhadip Das | Backend Capstone Project</p>
+        </footer>
+    </div>
 </body>
 </html>
