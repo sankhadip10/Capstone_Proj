@@ -21,4 +21,7 @@ RUN pip install -r requirements.txt \
 # Copy app code
 COPY . /app/
 
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
 EXPOSE 8000
