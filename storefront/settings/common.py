@@ -43,7 +43,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    # "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -176,7 +176,8 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'playground.tasks.notify_customer',
         # 'schedule': crontab(day_of_week=1,hour=7,minute=30),
         # 'schedule': crontab(minute='*/30'),
-        'schedule': 5.0,
+        # 'schedule': 5.0,
+        'schedule': crontab(minute=0),
         'args':['Hello World'],
 
     }
