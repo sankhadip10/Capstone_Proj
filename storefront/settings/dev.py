@@ -12,18 +12,21 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'storefront3',
-        'HOST': 'mysql',
+        # 'HOST': 'mysql',
+        'HOST': 'localhost',
         'USER': 'root',
         'PASSWORD': 'P@ssword'
     }
 }
 
-CELERY_BROKER_URL = 'redis://redis:6379/1'
+# CELERY_BROKER_URL = 'redis://redis:6379/1'
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/2",
+        # "LOCATION": "redis://redis:6379/2",
+        "LOCATION": "redis://localhost:6379/2",
         "TIMEOUT": 10 * 60,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -31,7 +34,8 @@ CACHES = {
     }
 }
 
-EMAIL_HOST = 'smtp4dev'
+# EMAIL_HOST = 'smtp4dev'
+EMAIL_HOST = 'localhost'
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 2525
