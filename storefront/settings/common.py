@@ -164,24 +164,58 @@ SIMPLE_JWT = {
 # EMAIL_HOST_USER = ''
 # EMAIL_HOST_PASSWORD = ''
 # EMAIL_PORT = 2525
-DEFAULT_FROM_EMAIL = 'ram.das25@gmail.com'
+DEFAULT_FROM_EMAIL = 'capstone.proj@gmail.com'
 
 ADMINS =[
-    ('sankha','admin@sankha.com')
+    ('admin','admin@gmail.com')
 ]
 
 
 CELERY_BEAT_SCHEDULE = {
-    'notify_customer' :{
-        'task': 'playground.tasks.notify_customer',
+    # 'notify_customer' :{
+    #     'task': 'playground.tasks.notify_customer',
         # 'schedule': crontab(day_of_week=1,hour=7,minute=30),
         # 'schedule': crontab(minute='*/30'),
         # 'schedule': 5.0,
-        'schedule': crontab(minute=0),
-        'args':['Hello World'],
+    #     'schedule': crontab(minute=0),
+    #     'args':['Hello World'],
+    #
+    # }
+    'daily-sales-report': {
+        'task': 'store.tasks.generate_daily_sales_report',
+        'schedule': crontab(hour=9, minute=0),
+    },
 
+    # Check inventory levels every 6 hours
+    'check-inventory-levels': {
+        'task': 'store.tasks.check_inventory_levels',
+        'schedule': crontab(minute=0, hour='*/6'),
+    },
+
+    # Clean up abandoned carts weekly on Sunday at 2 AM
+    'cleanup-abandoned-carts': {
+        'task': 'store.tasks.cleanup_abandoned_carts',
+        'schedule': crontab(hour=2, minute=0, day_of_week=0),
+    },
+
+    # Keep the existing test task
+    'notify_customer': {
+        'task': 'playground.tasks.notify_customer',
+        'schedule': crontab(minute=0),  # Every hour
+        'args': ['System health check'],
     }
 }
+CELERY_TASK_ROUTES = {
+    'store.tasks.send_order_confirmation_email': {'queue': 'emails'},
+    'store.tasks.send_low_inventory_alert': {'queue': 'emails'},
+    'store.tasks.generate_daily_sales_report': {'queue': 'reports'},
+    'store.tasks.cleanup_abandoned_carts': {'queue': 'maintenance'},
+}
+
+# Celery task retry settings
+CELERY_TASK_ACKS_LATE = True
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_TASK_REJECT_ON_WORKER_LOST = True
 
 
 

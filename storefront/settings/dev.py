@@ -40,8 +40,23 @@ EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 2525
 
+# (sends emails to console)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBARL_CALLBACK': lambda request: True,
 }
 
+# to fix the silk warning
+SILKY_PYTHON_PROFILER = True
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {'class': 'logging.StreamHandler'},
+    },
+    'loggers': {
+        'djoser': {'handlers': ['console'], 'level': 'DEBUG'},
+    },
+}
 

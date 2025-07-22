@@ -1,0 +1,21 @@
+Order Confirmation - {{ company_name }}
+
+Dear {{ customer_name }},
+
+Thank you for your order! Here are the details:
+
+Order #{{ order.id }}
+Order Date: {{ order.placed_at|date:"F d, Y g:i A" }}
+Payment Status: {{ order.get_payment_status_display }}
+
+Order Items:
+{% for item in order_items %}
+- {{ item.product.title }}
+  Qty: {{ item.quantity }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.item_total|floatformat:2 }}
+{% endfor %}
+
+Total: ${{ order_total|floatformat:2 }}
+
+Questions? Contact us at {{ support_email }}
+
+Thank you for shopping with {{ company_name }}!
