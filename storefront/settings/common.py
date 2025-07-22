@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'tags',
     'likes',
     'core',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -245,3 +246,7 @@ LOGGING = {
         }
     }
 }
+
+# Add Razorpay settings
+RAZORPAY_KEY_ID = 'rzp_test_GLpdkglq1xc3ql'
+RAZORPAY_KEY_SECRET = 'RuqJDjQUIn3fDoN7dP5EFbtw'

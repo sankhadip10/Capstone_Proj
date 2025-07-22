@@ -1,0 +1,171 @@
+<!-- store/templates/test_payment.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Razorpay Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        .payment-card { border: 1px solid #ddd; padding: 30px; border-radius: 8px; background: #f9f9f9; }
+        button { background: #007bff; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .order-details { background: white; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .status { padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="payment-card">
+        <h2>🛒 Test Payment - Django Storefront</h2>
+
+        <div class="order-details">
+            <h3>Order Details</h3>
+            <p><strong>Order ID:</strong> #1</p>
+            <p><strong>Customer:</strong> kingkon chy</p>
+            <p><strong>Amount:</strong> ₹8.00</p>
+            <p><strong>Items:</strong> Test products from your cart</p>
+        </div>
+
+        <button onclick="startPayment()">💳 Pay ₹8.00 with Razorpay</button>
+
+        <div id="status"></div>
+
+        <h4>Test Card Details:</h4>
+        <p><strong>Card Number:</strong> 4111 1111 1111 1111</p>
+        <p><strong>Expiry:</strong> Any future date (e.g., 12/25)</p>
+        <p><strong>CVV:</strong> Any 3 digits (e.g., 123)</p>
+    </div>
+
+    <script>
+    function showStatus(message, isError = false) {
+        const statusDiv = document.getElementById('status');
+        statusDiv.className = `status ${isError ? 'error' : 'success'}`;
+        statusDiv.innerHTML = message;
+    }
+
+    async function startPayment() {
+        try {
+            showStatus('Creating payment intent...', false);
+
+            // Step 1: Create payment intent
+            const response = await fetch('/payments/create-payment-intent/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // You'll need to get JWT token for real implementation
+                    // For now, this will fail but we can see the flow
+                },
+                body: JSON.stringify({
+                    order_id: 1
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            // Step 2: Initialize Razorpay
+            const options = {
+                key: data.razorpay_key,  // This comes from your API
+                amount: data.amount,
+                currency: data.currency,
+                name: data.name,
+                description: data.description,
+                order_id: data.razorpay_order_id,
+                handler: async function(response) {
+                    showStatus('Payment successful! Verifying...', false);
+                    await verifyPayment(response);
+                },
+                prefill: data.customer,
+                theme: {
+                    color: '#007bff'
+                },
+                modal: {
+                    ondismiss: function() {
+                        showStatus('Payment cancelled by user', true);
+                    }
+                }
+            };
+
+            const razorpay = new Razorpay(options);
+            razorpay.open();
+
+        } catch (error) {
+            console.error('Payment initialization failed:', error);
+            showStatus(`Payment initialization failed: ${error.message}`, true);
+
+            // For testing without API, use static values
+            testWithStaticValues();
+        }
+    }
+
+    // Fallback for testing without authentication
+    function testWithStaticValues() {
+        showStatus('Using test values (API not available)...', false);
+
+        const options = {
+            key: 'rzp_test_your_key_here', // Replace with your actual test key
+            amount: 800, // ₹8.00 in paise
+            currency: 'INR',
+            name: 'Django Storefront',
+            description: 'Test Payment for Order #1',
+            order_id: 'order_QwEgcUQ2zCDV9l', // Your actual payment intent ID
+            handler: function(response) {
+                showStatus(`
+                    ✅ Payment Successful!<br>
+                    Payment ID: ${response.razorpay_payment_id}<br>
+                    Order ID: ${response.razorpay_order_id}<br>
+                    Signature: ${response.razorpay_signature}
+                `, false);
+
+                // In real app, this would call your verify endpoint
+                console.log('Payment Response:', response);
+            },
+            prefill: {
+                name: 'kingkon chy',
+                email: 'kingkon@gmail.com',
+                contact: ''
+            },
+            theme: {
+                color: '#007bff'
+            }
+        };
+
+        const razorpay = new Razorpay(options);
+        razorpay.open();
+    }
+
+    async function verifyPayment(response) {
+        try {
+            const verifyResponse = await fetch('/payments/verify-payment/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add JWT token here in real implementation
+                },
+                body: JSON.stringify({
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature
+                })
+            });
+
+            const result = await verifyResponse.json();
+
+            if (verifyResponse.ok) {
+                showStatus('✅ Payment verified successfully! Order completed.', false);
+            } else {
+                showStatus('❌ Payment verification failed', true);
+            }
+
+        } catch (error) {
+            console.error('Payment verification failed:', error);
+            showStatus('❌ Payment verification failed', true);
+        }
+    }
+    </script>
+</body>
+</html>

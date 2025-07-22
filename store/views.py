@@ -448,5 +448,12 @@ class ProductImageViewSet(ModelViewSet):
     def get_queryset(self):
         return ProductImage.objects.filter(product=self.kwargs['product_pk'])
 
+def test_payment_view(request):
+    """Simple test payment page"""
+    return render(request, 'test_payment.html', {
+        'order_id': 1,
+        'amount': 8.00
+    })
+
 
 

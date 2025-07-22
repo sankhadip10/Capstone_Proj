@@ -24,7 +24,7 @@ carts_router = routers.NestedDefaultRouter(router, 'carts', lookup='cart')
 carts_router.register('items', views.CartItemViewSet, basename='cart-items')
 
 # URLConf
-urlpatterns = router.urls + products_router.urls + carts_router.urls
+urlpatterns = router.urls + products_router.urls + carts_router.urls +[
 # urlpatterns = [
 #     # path('products/', views.product_list),
 #     path('products/', views.ProductList.as_view()),
@@ -34,4 +34,5 @@ urlpatterns = router.urls + products_router.urls + carts_router.urls
 #     path('collections/', views.CollectionList.as_view()),
 #     # path('collections/<int:pk>', views.collection_detail, name='collection-detail')
 #     path('collections/<int:pk>', views.CollectionDetail.as_view(), name='collection-detail')
-# ]
+    path('test-payment/', views.test_payment_view, name='test-payment'),
+]

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Razorpay Test</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 50px; text-align: center; }
+        button { background: #528ff0; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin: 10px; }
+        .container { max-width: 400px; margin: 0 auto; border: 1px solid #ddd; padding: 30px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Razorpay Test</h2>
+        <p><strong>Amount:</strong> 1.00</p>
+        <p><strong>Test Card:</strong> 4111 1111 1111 1111</p>
+        <p><strong>CVV:</strong> 123, <strong>Expiry:</strong> 12/25</p>
+
+        <button onclick="startPayment()">Pay 1.00</button>
+
+        <div id="result" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+    function startPayment() {
+        // You need to replace 'rzp_test_...' with your actual test key
+        const options = {
+            key: 'rzp_test_GLpdkglq1xc3ql', // 🔑 ADD YOUR TEST KEY HERE
+            amount: 100, // ₹1.00 in paise (₹1 = 100 paise)
+            currency: 'INR',
+            name: 'Django Storefront',
+            description: 'Test Payment',
+            handler: function(response) {
+                document.getElementById('result').innerHTML = `
+                    <div style="background: #d4edda; padding: 15px; border-radius: 5px; color: #155724;">
+                        ✅ <strong>Payment Successful!</strong><br>
+                        Payment ID: ${response.razorpay_payment_id}<br>
+                        <small>In real app, this would update your order</small>
+                    </div>
+                `;
+                console.log('Payment Success:', response);
+            },
+            modal: {
+                ondismiss: function() {
+                    document.getElementById('result').innerHTML = `
+                        <div style="background: #f8d7da; padding: 15px; border-radius: 5px; color: #721c24;">
+                            ❌ Payment cancelled
+                        </div>
+                    `;
+                }
+            }
+        };
+
+        const razorpay = new Razorpay(options);
+        razorpay.open();
+    }
+    </script>
+</body>
+</html>

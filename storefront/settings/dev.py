@@ -5,6 +5,8 @@ DEBUG = True
 
 SECRET_KEY = 'django-insecure-uv+#w-4ck2lf177lu62%gz&zt5gmpb#*8k#anpyu$w8a+go4()'
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '713e64d060b2.ngrok-free.app']
+
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -59,4 +61,10 @@ LOGGING = {
         'djoser': {'handlers': ['console'], 'level': 'DEBUG'},
     },
 }
+
+# Razorpay Test Keys (get from Razorpay Dashboard)
+RAZORPAY_KEY_ID = 'rzp_test_GLpdkglq1xc3ql'
+RAZORPAY_KEY_SECRET = 'RuqJDjQUIn3fDoN7dP5EFbtw'
+RAZORPAY_WEBHOOK_SECRET = 'razorpay_test_secret_123'
+
 

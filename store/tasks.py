@@ -259,3 +259,232 @@ def check_inventory_levels():
     except Exception as exc:
         logger.error(f"Failed to check inventory levels: {exc}")
         raise
+
+
+@shared_task
+def process_payment_webhook(webhook_event_id):
+    """
+    Process Razorpay webhook events
+    """
+    try:
+        from payments.models import WebhookEvent, PaymentIntent
+
+        webhook_event = WebhookEvent.objects.get(id=webhook_event_id)
+        event_data = webhook_event.data
+
+        event_type = event_data.get('event')
+        payment_data = event_data.get('payload', {}).get('payment', {}).get('entity', {})
+
+        logger.info(f"Processing webhook event: {event_type}")
+        logger.info(f"Payment data: {payment_data}")
+
+        if event_type == 'payment.captured':
+            # Find payment intent
+            order_id = payment_data.get('order_id')
+            payment_id = payment_data.get('id')
+
+            logger.info(f"Looking for PaymentIntent with razorpay_order_id: {order_id}")
+
+            try:
+                payment_intent = PaymentIntent.objects.get(razorpay_order_id=order_id)
+                logger.info(f"Found PaymentIntent: {payment_intent.id}")
+
+                with transaction.atomic():
+                    # Update payment intent
+                    payment_intent.razorpay_payment_id = payment_id
+                    payment_intent.status = 'paid'
+                    payment_intent.webhook_received = True
+                    payment_intent.webhook_data = event_data
+                    payment_intent.save()
+
+                    # Update order using YOUR existing model structure
+                    order = payment_intent.order
+                    order.payment_status = Order.PAYMENT_STATUS_COMPLETE
+                    order.save()
+
+                    # Link webhook event
+                    webhook_event.payment_intent = payment_intent
+                    webhook_event.processed = True
+                    webhook_event.save()
+
+                    # Trigger fulfillment
+                    prepare_order_fulfillment.delay(order.id)
+
+                logger.info(f"Payment webhook processed successfully: {payment_id}")
+
+            except PaymentIntent.DoesNotExist:
+                logger.error(f"PaymentIntent not found for order_id: {order_id}")
+
+                # List all available PaymentIntents for debugging
+                available_intents = PaymentIntent.objects.all().values_list('razorpay_order_id', flat=True)
+                logger.error(f"Available PaymentIntents: {list(available_intents)}")
+
+                # Mark webhook as processed even if PaymentIntent not found
+                webhook_event.processed = True
+                webhook_event.save()
+
+        elif event_type == 'payment.failed':
+            # Handle failed payments
+            order_id = payment_data.get('order_id')
+
+            try:
+                payment_intent = PaymentIntent.objects.get(razorpay_order_id=order_id)
+                payment_intent.status = 'failed'
+                payment_intent.save()
+
+                # Update order
+                order = payment_intent.order
+                order.payment_status = Order.PAYMENT_STATUS_FAILED
+                order.save()
+
+                logger.info(f"Payment failed for order: {order.id}")
+
+            except PaymentIntent.DoesNotExist:
+                logger.error(f"PaymentIntent not found for failed payment: {order_id}")
+
+        return f"Webhook {event_type} processed successfully"
+
+    except Exception as exc:
+        logger.error(f"Failed to process webhook {webhook_event_id}: {exc}")
+        # Don't re-raise to prevent infinite retries
+        return f"Webhook processing failed: {exc}"
+
+@shared_task
+def prepare_order_fulfillment(order_id):
+    """
+    Prepare order for fulfillment after successful payment
+    """
+    try:
+        order = Order.objects.get(id=order_id)
+
+        # Here you would integrate with shipping providers, warehouse systems, etc.
+        logger.info(f"Preparing fulfillment for order {order_id}")
+
+        # Send fulfillment notification
+        send_fulfillment_notification.delay(order_id)
+
+        return f"Fulfillment preparation started for order {order_id}"
+
+    except Exception as exc:
+        logger.error(f"Failed to prepare fulfillment for order {order_id}: {exc}")
+        raise
+
+
+@shared_task
+def send_fulfillment_notification(order_id):
+    """
+    Send shipping notification to customer
+    """
+    try:
+        order = Order.objects.select_related('customer__user').get(id=order_id)
+        customer = order.customer
+        user = customer.user
+
+        context = {
+            'customer_name': f"{user.first_name} {user.last_name}",
+            'order': order,
+            'tracking_number': f"TRK{order_id:06d}",  # Mock tracking number
+        }
+
+        subject = f'Your Order #{order.id} Has Shipped!'
+
+        # For now, just send a simple email (you can create templates later)
+        message = f'''
+        Dear {context['customer_name']},
+
+        Great news! Your order #{order.id} has been shipped and is on its way to you.
+
+        Tracking Number: {context['tracking_number']}
+        Estimated Delivery: 3-5 business days
+
+        Thank you for shopping with Django Storefront!
+        '''
+
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False
+        )
+
+        logger.info(f"Shipping notification sent for order {order_id}")
+        return f"Shipping notification sent for order {order_id}"
+
+    except Exception as exc:
+        logger.error(f"Failed to send shipping notification for order {order_id}: {exc}")
+        raise
+
+
+@shared_task
+def process_payment_webhook(webhook_event_id):
+    """
+    Process Razorpay webhook events
+    """
+    try:
+        from payments.models import WebhookEvent, PaymentIntent
+
+        webhook_event = WebhookEvent.objects.get(id=webhook_event_id)
+        event_data = webhook_event.data
+
+        event_type = event_data.get('event')
+        payment_data = event_data.get('payload', {}).get('payment', {}).get('entity', {})
+
+        if event_type == 'payment.captured':
+            # Find payment intent
+            order_id = payment_data.get('order_id')
+            payment_id = payment_data.get('id')
+
+            try:
+                payment_intent = PaymentIntent.objects.get(razorpay_order_id=order_id)
+
+                with transaction.atomic():
+                    # Update payment intent
+                    payment_intent.razorpay_payment_id = payment_id
+                    payment_intent.status = 'paid'
+                    payment_intent.webhook_received = True
+                    payment_intent.webhook_data = event_data
+                    payment_intent.save()
+
+                    # Update order using YOUR existing model structure
+                    order = payment_intent.order
+                    order.payment_status = Order.PAYMENT_STATUS_COMPLETE  # Uses your existing constants
+                    order.save()
+
+                    # Link webhook event
+                    webhook_event.payment_intent = payment_intent
+                    webhook_event.processed = True
+                    webhook_event.save()
+
+                    # Trigger fulfillment
+                    prepare_order_fulfillment.delay(order.id)
+
+                logger.info(f"Payment webhook processed: {payment_id}")
+
+            except PaymentIntent.DoesNotExist:
+                logger.error(f"PaymentIntent not found for order_id: {order_id}")
+
+        elif event_type == 'payment.failed':
+            # Handle failed payments using YOUR existing model structure
+            order_id = payment_data.get('order_id')
+
+            try:
+                payment_intent = PaymentIntent.objects.get(razorpay_order_id=order_id)
+                payment_intent.status = 'failed'
+                payment_intent.save()
+
+                # Update order
+                order = payment_intent.order
+                order.payment_status = Order.PAYMENT_STATUS_FAILED  # Uses your existing constants
+                order.save()
+
+                logger.info(f"Payment failed for order: {order.id}")
+
+            except PaymentIntent.DoesNotExist:
+                logger.error(f"PaymentIntent not found for failed payment: {order_id}")
+
+        return f"Webhook {event_type} processed successfully"
+
+    except Exception as exc:
+        logger.error(f"Failed to process webhook {webhook_event_id}: {exc}")
+        raise

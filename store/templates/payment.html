@@ -1,0 +1,89 @@
+<!-- store/templates/payment.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment - Django Storefront</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <div id="payment-form">
+        <h2>Complete Your Payment</h2>
+        <button id="pay-now" onclick="startPayment()">Pay Now</button>
+    </div>
+
+    <script>
+    async function startPayment() {
+        try {
+            // Create payment intent
+            const response = await fetch('/payments/create-payment-intent/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `JWT ${localStorage.getItem('jwt_token')}`
+                },
+                body: JSON.stringify({
+                    order_id: {{ order_id }}  // Pass from template context
+                })
+            });
+
+            const data = await response.json();
+
+            // Initialize Razorpay
+            const options = {
+                key: data.razorpay_key,
+                amount: data.amount,
+                currency: data.currency,
+                name: data.name,
+                description: data.description,
+                order_id: data.razorpay_order_id,
+                handler: async function(response) {
+                    // Verify payment
+                    await verifyPayment(response);
+                },
+                prefill: data.customer,
+                theme: {
+                    color: '#007bff'
+                }
+            };
+
+            const razorpay = new Razorpay(options);
+            razorpay.open();
+
+        } catch (error) {
+            console.error('Payment failed:', error);
+            alert('Payment initialization failed');
+        }
+    }
+
+    async function verifyPayment(response) {
+        try {
+            const verifyResponse = await fetch('/payments/verify-payment/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `JWT ${localStorage.getItem('jwt_token')}`
+                },
+                body: JSON.stringify({
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature
+                })
+            });
+
+            const result = await verifyResponse.json();
+
+            if (verifyResponse.ok) {
+                alert('Payment successful!');
+                window.location.href = '/orders/success/';
+            } else {
+                alert('Payment verification failed');
+            }
+
+        } catch (error) {
+            console.error('Payment verification failed:', error);
+            alert('Payment verification failed');
+        }
+    }
+    </script>
+</body>
+</html>
