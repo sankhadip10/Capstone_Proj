@@ -7,31 +7,8 @@ from rest_framework.test import APIClient
 from model_bakery import baker
 
 from store.models import Order, OrderItem, Product, Customer, Cart, CartItem, Collection
-from payments.models import PaymentIntent
-from payments.serializers import CreatePaymentIntentSerializer
 
 User = get_user_model()
-
-
-@pytest.fixture
-def authenticated_user(api_client):
-    user = baker.make(User)
-    customer = baker.make(Customer, user=user)
-    api_client.force_authenticate(user=user)
-    return user
-
-
-@pytest.fixture
-def sample_product():
-    collection = baker.make(Collection)
-    return baker.make(Product, unit_price=Decimal('10.00'), inventory=50, collection=collection)
-
-
-@pytest.fixture
-def cart_with_items(sample_product):
-    cart = baker.make(Cart)
-    cart_item = baker.make(CartItem, cart=cart, product=sample_product, quantity=2)
-    return cart
 
 
 @pytest.mark.django_db

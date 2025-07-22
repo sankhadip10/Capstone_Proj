@@ -13,15 +13,23 @@ class TestSignals:
 
     def test_customer_created_on_user_creation(self):
         """Test that customer is auto-created when user is created"""
-        user = User.objects.create_user(
-            username='testuser',
-            email='test@example.com',
-            password='testpass123'
-        )
+        # Re-enable signal for this specific test
+        from core.signals.handlers import create_customer_for_new_user
+        post_save.connect(create_customer_for_new_user, sender=User)
 
-        assert Customer.objects.filter(user=user).exists()
-        customer = Customer.objects.get(user=user)
-        assert customer.membership == Customer.MEMBERSHIP_BRONZE
+        try:
+            user = User.objects.create_user(
+                username='testuser',
+                email='test@example.com',
+                password='testpass123'
+            )
+
+            assert Customer.objects.filter(user=user).exists()
+            customer = Customer.objects.get(user=user)
+            assert customer.membership == Customer.MEMBERSHIP_BRONZE
+        finally:
+            # Disconnect signal after test
+            post_save.disconnect(create_customer_for_new_user, sender=User)
 
     @patch('store.tasks.send_order_confirmation_email.delay')
     @patch('store.tasks.update_inventory_after_order.delay')

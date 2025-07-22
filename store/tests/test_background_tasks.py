@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from django.core import mail
 from django.test import override_settings
+from decimal import Decimal
 from model_bakery import baker
 
 from store.tasks import (
@@ -11,7 +12,7 @@ from store.tasks import (
     generate_daily_sales_report,
     cleanup_abandoned_carts
 )
-from store.models import Order, Product, Customer, Cart
+from store.models import Order, Product, Customer, Cart, OrderItem
 from core.models import User
 
 
@@ -19,7 +20,7 @@ from core.models import User
 class TestCeleryTasks:
 
     @pytest.fixture
-    def order_with_items(self):
+    def order_with_items_for_tasks(self):
         """Create order with items for testing"""
         user = baker.make(User, email='test@example.com', first_name='Test', last_name='User')
         customer = baker.make(Customer, user=user)
@@ -30,32 +31,32 @@ class TestCeleryTasks:
 
         return order
 
-    def test_send_order_confirmation_email(self, order_with_items):
+    def test_send_order_confirmation_email(self, order_with_items_for_tasks):
         """Test order confirmation email task"""
         # Clear any existing mail
         mail.outbox = []
 
-        result = send_order_confirmation_email(order_with_items.id)
+        result = send_order_confirmation_email(order_with_items_for_tasks.id)
 
         assert 'Email sent successfully' in result
         assert len(mail.outbox) == 1
 
         email = mail.outbox[0]
-        assert f'Order Confirmation #{order_with_items.id}' in email.subject
+        assert f'Order Confirmation #{order_with_items_for_tasks.id}' in email.subject
         assert 'test@example.com' in email.to
         assert 'Test User' in email.body
 
-    def test_update_inventory_after_order(self, order_with_items):
+    def test_update_inventory_after_order(self, order_with_items_for_tasks):
         """Test inventory update task"""
-        order_item = order_with_items.items.first()
+        order_item = order_with_items_for_tasks.items.first()
         product = order_item.product
         original_inventory = product.inventory
 
-        result = update_inventory_after_order(order_with_items.id)
+        result = update_inventory_after_order(order_with_items_for_tasks.id)
 
         product.refresh_from_db()
         assert product.inventory == original_inventory - order_item.quantity
-        assert f'Inventory updated for order {order_with_items.id}' in result
+        assert f'Inventory updated for order {order_with_items_for_tasks.id}' in result
 
     def test_send_low_inventory_alert(self):
         """Test low inventory alert task"""

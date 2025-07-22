@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.conf import settings
 
 
 class CoreConfig(AppConfig):
@@ -6,4 +7,6 @@ class CoreConfig(AppConfig):
     name = 'core'
 
     def ready(self):
-        import core.signals.handlers
+        # import core.signals.handlers
+        if getattr(settings, 'CORE_SIGNALS_ENABLED', True):
+            import core.signals.handlers
