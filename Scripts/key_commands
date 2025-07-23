@@ -1,0 +1,34 @@
+# 1. BASIC DEVELOPMENT
+docker-compose up -d                    # Start all services
+docker-compose logs -f web             # View Django logs
+docker-compose exec web python manage.py shell  # Django shell
+
+# 2. TESTING
+docker-compose --profile testing run --rm tests  # Run tests
+docker-compose exec web pytest store/tests/ -v  # Run tests in running container
+
+# 3. LOAD TESTING
+docker-compose --profile loadtest up locust     # Start Locust
+# Then visit http://localhost:8089
+
+# 4. CACHE MANAGEMENT
+docker-compose exec web python manage.py inspect_cache  # Check cache
+docker-compose --profile cache run --rm cache-warmer   # Warm cache
+
+# 5. DATABASE OPERATIONS
+docker-compose exec web python manage.py migrate       # Run migrations
+docker-compose exec web python manage.py seed_db      # Load test data
+docker-compose exec mysql mysql -u root -p storefront3 # MySQL shell
+
+# 6. CELERY MONITORING
+# Visit http://localhost:5555 for Flower dashboard
+docker-compose logs -f celery          # View Celery logs
+docker-compose exec celery celery -A storefront inspect active  # Check active tasks
+
+# 7. EMAIL TESTING
+# Visit http://localhost:5000 for SMTP4Dev dashboard
+
+# 8. CLEANUP
+docker-compose down                     # Stop services
+docker-compose down -v                 # Stop and remove volumes
+docker system prune -f                # Clean up Docker system

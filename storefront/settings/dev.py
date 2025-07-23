@@ -3,7 +3,8 @@ from .common import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-SECRET_KEY = 'django-insecure-uv+#w-4ck2lf177lu62%gz&zt5gmpb#*8k#anpyu$w8a+go4()'
+# Use environment variable for secret key with fallback
+SECRET_KEY = os.environ.get('SECRET_KEY', '')
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '713e64d060b2.ngrok-free.app']
 
@@ -15,7 +16,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'storefront3',
         # 'HOST': 'mysql',
-        'HOST': 'localhost',
+        'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
         'USER': 'root',
         'PASSWORD': 'P@ssword'
     }
@@ -28,7 +29,7 @@ CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         # "LOCATION": "redis://redis:6379/2",
-        "LOCATION": "redis://localhost:6379/2",
+        "LOCATION": os.environ.get('CACHE_URL', 'redis://localhost:6379/2'),
         "TIMEOUT": 10 * 60,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -37,7 +38,7 @@ CACHES = {
 }
 
 # EMAIL_HOST = 'smtp4dev'
-EMAIL_HOST = 'localhost'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 2525
@@ -63,8 +64,8 @@ LOGGING = {
 }
 
 # Razorpay Test Keys (get from Razorpay Dashboard)
-RAZORPAY_KEY_ID = 'rzp_test_GLpdkglq1xc3ql'
-RAZORPAY_KEY_SECRET = 'RuqJDjQUIn3fDoN7dP5EFbtw'
-RAZORPAY_WEBHOOK_SECRET = 'razorpay_test_secret_123'
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', '')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', '')
+RAZORPAY_WEBHOOK_SECRET = os.environ.get('RAZORPAY_WEBHOOK_SECRET', '')
 
 

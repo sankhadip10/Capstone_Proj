@@ -1,4 +1,4 @@
-#version: '3.10'
+#version: '3.8'
 services:
   web:
     build: .
@@ -11,6 +11,21 @@ services:
     restart: on-failure
     volumes:
       - .:/app
+      - media_volume:/app/media
+    # 🔐 Load secrets from .env.docker (not committed to git)
+    env_file:
+      - .env.docker
+    environment:
+      # Non-secret development settings
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=storefront.settings.dev
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CACHE_URL=redis://redis:6379/2
+      - MYSQL_HOST=mysql
+      - EMAIL_HOST=smtp4dev
+      - EMAIL_PORT=25
+      - EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+
   mysql:
     image: mysql:8.0
     ports:
@@ -21,6 +36,7 @@ services:
       - MYSQL_ROOT_PASSWORD=P@ssword
     volumes:
       - mysqldata:/var/lib/mysql
+
   redis:
     image: redis:6.2-alpine
     ports:
@@ -28,49 +44,80 @@ services:
     restart: always
     volumes:
       - redisdata:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
   smtp4dev:
     image: rnwood/smtp4dev:v3
     ports:
       - 5000:80
       - 25:25
     restart: always
+
   celery:
     build: .
-    command: celery -A storefront worker --loglevel=info
+    command: celery -A storefront worker --loglevel=info --concurrency=4
     depends_on:
       - redis
+      - mysql
     volumes:
       - .:/app
+      - media_volume:/app/media
+    env_file:
+      - .env.docker
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - DJANGO_SETTINGS_MODULE=storefront.settings.dev
+    restart: on-failure
+
   celery-beat:
     build: .
     command: celery -A storefront beat --loglevel=info
     depends_on:
       - redis
+      - mysql
     volumes:
       - .:/app
+    env_file:
+      - .env.docker
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - DJANGO_SETTINGS_MODULE=storefront.settings.dev
+    restart: on-failure
+
   flower:
     build: .
-    command: celery -A storefront flower
+    command: celery -A storefront flower --port=5555
     depends_on:
       - web
       - redis
       - celery
+    env_file:
+      - .env.docker
     environment:
-      - DEBUG=1
-      - CELERY_BROKER=redis://redis:6379/0
-      - CELERY_BACKEND=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
     ports:
       - 5555:5555
+    restart: on-failure
+
+  # Testing (optional)
   tests:
     build: .
-    command: ./wait-for-it.sh mysql:3306 -- ptw
+    command: ./wait-for-it.sh mysql:3306 -- pytest store/tests/ -v
     depends_on:
       - redis
       - mysql
-    tty: true
+    env_file:
+      - .env.docker
+    environment:
+      - DJANGO_SETTINGS_MODULE=storefront.settings.test
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CACHE_URL=redis://redis:6379/2
+      - MYSQL_HOST=mysql
     volumes:
       - .:/app
+    profiles: ["testing"]
+
 volumes:
   mysqldata:
-  pgdata:
   redisdata:
+  media_volume:
