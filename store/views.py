@@ -448,12 +448,26 @@ class ProductImageViewSet(ModelViewSet):
     def get_queryset(self):
         return ProductImage.objects.filter(product=self.kwargs['product_pk'])
 
-def test_payment_view(request):
-    """Simple test payment page"""
-    return render(request, 'test_payment.html', {
-        'order_id': 1,
-        'amount': 8.00
-    })
+# def test_payment_view(request):
+#     """Simple test payment page"""
+#     return render(request, 'test_payment.html', {
+#         'order_id': 1,
+#         'amount': 8.00
+#     })
+#
+# def quick_payment_test(request):
+#     """Quick payment test with working payment intent"""
+#     context = {
+#         'razorpay_key_id': 'rzp_test_GLpdkglq1xc3ql',  # Your test key
+#         'razorpay_order_id': 'order_QwWAFT3QlSEipZ',    # From successful test
+#         'amount': 100,  # ₹1.00 in paise
+#         'payment_intent_id': '5c0c2073-c129-45af-8abd-0c16212022e0'
+#     }
+#     return render(request, 'quick_payment_test.html', context)
+
+def payment_test_view(request):
+    """Production payment test page"""
+    return render(request, 'store/payment_test.html')
 
 
 

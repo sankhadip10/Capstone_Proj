@@ -34,5 +34,7 @@ urlpatterns = router.urls + products_router.urls + carts_router.urls +[
 #     path('collections/', views.CollectionList.as_view()),
 #     # path('collections/<int:pk>', views.collection_detail, name='collection-detail')
 #     path('collections/<int:pk>', views.CollectionDetail.as_view(), name='collection-detail')
-    path('test-payment/', views.test_payment_view, name='test-payment'),
+#     path('test-payment/', views.test_payment_view, name='test-payment'),
+#     path('quick-payment-test/', views.quick_payment_test, name='quick-payment-test'),
+    path('payment-test/', views.payment_test_view, name='payment-test'),
 ]

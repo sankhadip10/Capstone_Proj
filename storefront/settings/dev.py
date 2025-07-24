@@ -1,10 +1,9 @@
 from .common import *
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 # Use environment variable for secret key with fallback
-SECRET_KEY = os.environ.get('SECRET_KEY', '')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-abc123xyz789')
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '713e64d060b2.ngrok-free.app']
 
