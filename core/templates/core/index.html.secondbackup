@@ -1,0 +1,709 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django E-Commerce Store - Live Demo</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Simple icon system using CSS */
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .icon-cart {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>') no-repeat center;
+        }
+
+        .icon-card {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>') no-repeat center;
+        }
+
+        .icon-user {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>') no-repeat center;
+        }
+
+        .icon-admin {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>') no-repeat center;
+        }
+
+        .icon-email {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>') no-repeat center;
+        }
+
+        .icon-code {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>') no-repeat center;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                        radial-gradient(circle at 50% 50%, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+            background-size: cover;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-family: inherit;
+        }
+
+        .cta-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .cta-btn.secondary {
+            background: transparent;
+            border: 2px solid white;
+        }
+
+        .cta-btn.secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .features {
+            background: white;
+            padding: 80px 20px;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            display: flex;
+            justify-content: center;
+        }
+
+        .feature-icon .icon {
+            width: 60px;
+            height: 60px;
+            margin: 0;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #666;
+            margin-bottom: 20px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .try-btn {
+            background: #4ecdc4;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .try-btn:hover {
+            background: #45b7aa;
+            transform: scale(1.05);
+        }
+
+        .demo-section {
+            background: #2c3e50;
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .demo-section h2 {
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+
+        .demo-section p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .demo-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .demo-step {
+            background: rgba(255,255,255,0.1);
+            padding: 30px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            background: #ff6b6b;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .demo-step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .demo-step p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .quick-links {
+            background: #ecf0f1;
+            padding: 60px 20px;
+        }
+
+        .quick-links h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 2.5rem;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .link-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .link-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .link-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .link-card a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .link-card a:hover {
+            text-decoration: underline;
+        }
+
+        .link-card p {
+            margin: 8px 0;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .link-card strong {
+            font-weight: 600;
+        }
+
+        .stats {
+            background: #34495e;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .stats h2 {
+            font-weight: 600;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat {
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #3498db;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 400;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .footer p {
+            margin: 10px 0;
+            font-weight: 400;
+        }
+
+        .footer strong {
+            font-weight: 600;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            font-family: inherit;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .code-example {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid #667eea;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .features-grid { grid-template-columns: 1fr; }
+            .container { padding: 0 15px; }
+            .features h2, .demo-section h2, .quick-links h2, .stats h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1><span class="icon icon-cart"></span>Complete E-Commerce Platform</h1>
+            <p>Experience a fully functional online store with secure payments, real-time inventory, and automated order processing. Built with Django REST Framework and powered by modern technologies.</p>
+            <div class="cta-buttons">
+                <a href="#demo" class="cta-btn">Try Live Demo</a>
+                <a href="#features" class="cta-btn secondary">Explore Features</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2>What You Can Do Here</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><span class="icon icon-cart"></span></div>
+                    <h3>Shop Products</h3>
+                    <p>Browse 1000+ products across 10 categories. Add items to cart, manage quantities, and experience smooth shopping.</p>
+                    <button class="try-btn" onclick="showDemo('shopping')">Try Shopping</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon"><span class="icon icon-card"></span></div>
+                    <h3>Secure Payments</h3>
+                    <p>Complete real transactions using Razorpay. Test with demo cards or use UPI for authentic payment experience.</p>
+                    <button class="try-btn" onclick="showDemo('payment')">Test Payment</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon"><span class="icon icon-user"></span></div>
+                    <h3>User Accounts</h3>
+                    <p>Register, login, manage profile, and track order history. Full user authentication with JWT tokens.</p>
+                    <button class="try-btn" onclick="showDemo('account')">Create Account</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon"><span class="icon icon-admin"></span></div>
+                    <h3>Admin Dashboard</h3>
+                    <p>Manage products, orders, customers, and view analytics through a comprehensive admin interface.</p>
+                    <button class="try-btn" onclick="showDemo('admin')">View Admin</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon"><span class="icon icon-email"></span></div>
+                    <h3>Email Notifications</h3>
+                    <p>Automatic order confirmations, shipping updates, and admin alerts powered by background tasks.</p>
+                    <button class="try-btn" onclick="showDemo('email')">See Examples</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon"><span class="icon icon-code"></span></div>
+                    <h3>API Access</h3>
+                    <p>Full REST API with 30+ endpoints for developers. Perfect for mobile apps or frontend frameworks.</p>
+                    <button class="try-btn" onclick="showDemo('api')">Explore API</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <h2>Quick Demo Guide</h2>
+            <p>Follow these simple steps to experience the complete shopping flow:</p>
+
+            <div class="demo-steps">
+                <div class="demo-step">
+                    <div class="step-number">1</div>
+                    <h3>Browse Products</h3>
+                    <p>Visit our product catalog and explore items by category or search</p>
+                    <a href="/store/products/" class="cta-btn" style="margin-top: 15px;">View Products</a>
+                </div>
+
+                <div class="demo-step">
+                    <div class="step-number">2</div>
+                    <h3>Create Account</h3>
+                    <p>Quick registration to unlock full shopping capabilities</p>
+                    <button class="cta-btn" style="margin-top: 15px;" onclick="showDemo('register')">Register Now</button>
+                </div>
+
+                <div class="demo-step">
+                    <div class="step-number">3</div>
+                    <h3>Add to Cart</h3>
+                    <p>Select products and manage your shopping cart</p>
+                    <button class="cta-btn" style="margin-top: 15px;" onclick="showDemo('cart')">Learn How</button>
+                </div>
+
+                <div class="demo-step">
+                    <div class="step-number">4</div>
+                    <h3>Complete Payment</h3>
+                    <p>Secure checkout with multiple payment options</p>
+                    <a href="/store/payment-test/" class="cta-btn" style="margin-top: 15px;">Test Payment</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Links -->
+    <section class="quick-links">
+        <div class="container">
+            <h2>Quick Access Links</h2>
+            <div class="links-grid">
+                <div class="link-card">
+                    <h4><span class="icon icon-cart"></span>Shopping Experience</h4>
+                    <p><a href="/store/products/"><strong>Browse Products</strong></a> - View our catalog</p>
+                    <p><a href="/store/collections/"><strong>Categories</strong></a> - Shop by category</p>
+                    <p><a href="#" onclick="showDemo('search')"><strong>Search Guide</strong></a> - Find products easily</p>
+                </div>
+
+                <div class="link-card">
+                    <h4><span class="icon icon-user"></span>User Features</h4>
+                    <p><a href="#" onclick="showDemo('register')"><strong>Register Account</strong></a> - Create new account</p>
+                    <p><a href="#" onclick="showDemo('login')"><strong>Login Guide</strong></a> - Access your account</p>
+                    <p><a href="#" onclick="showDemo('profile')"><strong>Manage Profile</strong></a> - Update your info</p>
+                </div>
+
+                <div class="link-card">
+                    <h4><span class="icon icon-card"></span>Payment Testing</h4>
+                    <p><a href="/store/payment-test/"><strong>Payment Demo</strong></a> - Test with sample data</p>
+                    <p><a href="#" onclick="showDemo('payment')"><strong>Payment Guide</strong></a> - Step-by-step instructions</p>
+                    <p><a href="#" onclick="showDemo('cards')"><strong>Test Cards</strong></a> - Demo card numbers</p>
+                </div>
+
+                <div class="link-card">
+                    <h4><span class="icon icon-admin"></span>Admin & Technical</h4>
+                    <p><a href="/admin/"><strong>Admin Panel</strong></a> - Manage the store</p>
+                    <p><a href="#" onclick="showDemo('api')"><strong>API Documentation</strong></a> - For developers</p>
+                    <p><a href="/__debug__/"><strong>Debug Tools</strong></a> - Performance insights</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <h2>Platform Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat">
+                    <span class="stat-number">1000+</span>
+                    <div class="stat-label">Products Available</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">10</span>
+                    <div class="stat-label">Product Categories</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">30+</span>
+                    <div class="stat-label">API Endpoints</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <div class="stat-label">Payment Success Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Django E-Commerce Platform | Built with Django REST Framework | Powered by Razorpay</p>
+            <p><strong>Developed by Sankhadip Das</strong> | Master's Capstone Project</p>
+        </div>
+    </footer>
+
+    <!-- Modal for demos -->
+    <div id="demoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalContent">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        const modal = document.getElementById('demoModal');
+        const span = document.getElementsByClassName('close')[0];
+
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Demo content
+        const demoContent = {
+            shopping: `
+                <h2>🛒 How to Shop</h2>
+                <h3>Step 1: Browse Products</h3>
+                <p>Visit: <a href="/store/products/" target="_blank">/store/products/</a></p>
+                <p>• View 1000+ products with images and prices</p>
+                <p>• Filter by category or search by name</p>
+
+                <h3>Step 2: View Product Details</h3>
+                <p>Click any product to see:</p>
+                <p>• Full description and specifications</p>
+                <p>• Customer reviews and ratings</p>
+                <p>• Available quantity</p>
+
+                <h3>Step 3: Add to Cart</h3>
+                <div class="code-example">
+POST /store/carts/
+POST /store/carts/{cart-id}/items/
+{"product_id": 1, "quantity": 2}
+                </div>
+
+                <p><strong>Try it now:</strong> <a href="/store/products/" target="_blank">Browse Products →</a></p>
+            `,
+
+            payment: `
+                <h2>💳 Payment Testing Guide</h2>
+                <h3>Ready-to-Use Test Setup</h3>
+                <p><strong>Quick Test:</strong> <a href="/store/payment-test/" target="_blank">Payment Demo Page →</a></p>
+
+                <h3>Test Payment Details</h3>
+                <div class="code-example">
+Card Number: 4111 1111 1111 1111
+CVV: 123
+Expiry: 12/25
+Name: Any name
+                </div>
+
+                <h3>UPI Testing</h3>
+                <p>• Use any UPI ID (e.g., test@upi)</p>
+                <p>• Select "Success" in test mode</p>
+
+                <p><strong>Start Testing:</strong> <a href="/store/payment-test/" target="_blank">Try Payment Now →</a></p>
+            `,
+
+            account: '<h2>👤 Account Guide</h2><p>Register and manage your account...</p>',
+            admin: '<h2>🔧 Admin Guide</h2><p>Access admin panel with demo credentials...</p>',
+            email: '<h2>📧 Email System</h2><p>Automated notifications and confirmations...</p>',
+            api: '<h2>💻 API Documentation</h2><p>Complete REST API with 30+ endpoints...</p>',
+            register: '<h2>📝 Registration</h2><p>Create your account quickly...</p>',
+            login: '<h2>🔐 Login Guide</h2><p>Access your account...</p>',
+            cart: '<h2>🛒 Cart Management</h2><p>Add and manage items...</p>',
+            search: '<h2>🔍 Search Guide</h2><p>Find products easily...</p>',
+            profile: '<h2>👤 Profile Management</h2><p>Update your information...</p>',
+            cards: '<h2>💳 Test Cards</h2><p>Demo payment cards...</p>'
+        };
+
+        function showDemo(type) {
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = demoContent[type] || '<h2>Demo not found</h2>';
+            modal.style.display = 'block';
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
