@@ -14,6 +14,7 @@
 - **📊 Admin Panel**: [/admin/](https://capstone-prod-ea68d8515465.herokuapp.com/admin/) (admin/1122334455)
 - **💳 Payment Testing**: [/store/payment-test/](https://capstone-prod-ea68d8515465.herokuapp.com/store/payment-test/)
 - **📈 Performance Debug**: [/__debug__/](https://capstone-prod-ea68d8515465.herokuapp.com/__debug__/)
+- **📈 Report**:[https://docs.google.com/document/d/1eGo_4R00Pvx8OsSjhpaBMOL-nXgfohoHhDcZhDgDFDM/edit?usp=sharing]
 
 ## 📋 Table of Contents
 
