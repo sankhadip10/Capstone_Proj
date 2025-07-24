@@ -5,19 +5,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Django E-Commerce Store - Live Demo</title>
+
+    <!-- Google Fonts for better emoji and character support -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for icons as fallback -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'core/styles.css' %}">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Ensure emojis render properly */
+        .emoji {
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+            font-size: 1.2em;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* Icon alternatives using Font Awesome */
+        .icon {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
+            color: #667eea;
         }
 
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23667eea;stop-opacity:1" /><stop offset="100%" style="stop-color:%23764ba2;stop-opacity:1" /></linearGradient></defs><rect width="1200" height="600" fill="url(%23grad)"/></svg>');
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                        radial-gradient(circle at 50% 50%, #667eea 0%, #764ba2 100%);
             color: white;
             text-align: center;
             padding: 100px 20px;
@@ -28,6 +61,7 @@
             font-size: 3.5rem;
             margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-weight: 700;
         }
 
         .hero p {
@@ -36,6 +70,8 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            font-weight: 400;
+            opacity: 0.95;
         }
 
         .cta-buttons {
@@ -52,11 +88,12 @@
             border: none;
             border-radius: 50px;
             font-size: 1.1rem;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
+            font-family: inherit;
         }
 
         .cta-btn:hover {
@@ -91,6 +128,7 @@
             font-size: 2.5rem;
             margin-bottom: 50px;
             color: #333;
+            font-weight: 600;
         }
 
         .features-grid {
@@ -117,17 +155,20 @@
         .feature-icon {
             font-size: 3rem;
             margin-bottom: 20px;
+            color: #667eea;
         }
 
         .feature-card h3 {
             font-size: 1.5rem;
             margin-bottom: 15px;
             color: #333;
+            font-weight: 600;
         }
 
         .feature-card p {
             color: #666;
             margin-bottom: 20px;
+            font-weight: 400;
         }
 
         .try-btn {
@@ -138,7 +179,8 @@
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: bold;
+            font-weight: 600;
+            font-family: inherit;
         }
 
         .try-btn:hover {
@@ -151,6 +193,11 @@
             color: white;
             padding: 80px 20px;
             text-align: center;
+        }
+
+        .demo-section h2 {
+            font-weight: 600;
+            margin-bottom: 20px;
         }
 
         .demo-steps {
@@ -176,7 +223,7 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            font-weight: bold;
+            font-weight: 700;
             font-size: 1.2rem;
         }
 
@@ -189,6 +236,7 @@
             text-align: center;
             margin-bottom: 40px;
             color: #2c3e50;
+            font-weight: 600;
         }
 
         .links-grid {
@@ -211,17 +259,25 @@
 
         .link-card h4 {
             color: #2c3e50;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
         }
 
         .link-card a {
             color: #3498db;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 500;
         }
 
         .link-card a:hover {
             text-decoration: underline;
+        }
+
+        .link-card p {
+            margin: 8px 0;
+            color: #666;
         }
 
         .stats {
@@ -229,6 +285,10 @@
             color: white;
             padding: 60px 20px;
             text-align: center;
+        }
+
+        .stats h2 {
+            font-weight: 600;
         }
 
         .stats-grid {
@@ -244,7 +304,7 @@
 
         .stat-number {
             font-size: 3rem;
-            font-weight: bold;
+            font-weight: 700;
             color: #3498db;
             display: block;
         }
@@ -252,6 +312,7 @@
         .stat-label {
             font-size: 1.1rem;
             margin-top: 10px;
+            font-weight: 400;
         }
 
         .footer {
@@ -259,6 +320,15 @@
             color: white;
             text-align: center;
             padding: 40px 20px;
+        }
+
+        .footer p {
+            margin: 10px 0;
+            font-weight: 400;
+        }
+
+        .footer strong {
+            font-weight: 600;
         }
 
         .modal {
@@ -281,6 +351,7 @@
             max-width: 600px;
             max-height: 80vh;
             overflow-y: auto;
+            font-family: inherit;
         }
 
         .close {
@@ -299,9 +370,11 @@
             background: #f4f4f4;
             padding: 15px;
             border-radius: 5px;
-            font-family: monospace;
+            font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
             margin: 15px 0;
             overflow-x: auto;
+            border-left: 4px solid #667eea;
+            font-size: 14px;
         }
 
         @media (max-width: 768px) {
@@ -309,6 +382,7 @@
             .hero p { font-size: 1.1rem; }
             .cta-buttons { flex-direction: column; align-items: center; }
             .features-grid { grid-template-columns: 1fr; }
+            .container { padding: 0 15px; }
         }
     </style>
 </head>
@@ -316,7 +390,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>🛍️ Complete E-Commerce Platform</h1>
+            <h1><i class="fas fa-shopping-cart icon"></i>Complete E-Commerce Platform</h1>
             <p>Experience a fully functional online store with secure payments, real-time inventory, and automated order processing. Built with Django REST Framework and powered by modern technologies.</p>
             <div class="cta-buttons">
                 <a href="#demo" class="cta-btn">Try Live Demo</a>
@@ -331,42 +405,42 @@
             <h2>What You Can Do Here</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🛒</div>
+                    <div class="feature-icon"><i class="fas fa-shopping-basket"></i></div>
                     <h3>Shop Products</h3>
                     <p>Browse 1000+ products across 10 categories. Add items to cart, manage quantities, and experience smooth shopping.</p>
                     <button class="try-btn" onclick="showDemo('shopping')">Try Shopping</button>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">💳</div>
+                    <div class="feature-icon"><i class="fas fa-credit-card"></i></div>
                     <h3>Secure Payments</h3>
                     <p>Complete real transactions using Razorpay. Test with demo cards or use UPI for authentic payment experience.</p>
                     <button class="try-btn" onclick="showDemo('payment')">Test Payment</button>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">👤</div>
+                    <div class="feature-icon"><i class="fas fa-user-circle"></i></div>
                     <h3>User Accounts</h3>
                     <p>Register, login, manage profile, and track order history. Full user authentication with JWT tokens.</p>
                     <button class="try-btn" onclick="showDemo('account')">Create Account</button>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">📊</div>
+                    <div class="feature-icon"><i class="fas fa-chart-dashboard"></i></div>
                     <h3>Admin Dashboard</h3>
                     <p>Manage products, orders, customers, and view analytics through a comprehensive admin interface.</p>
                     <button class="try-btn" onclick="showDemo('admin')">View Admin</button>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">📧</div>
+                    <div class="feature-icon"><i class="fas fa-envelope"></i></div>
                     <h3>Email Notifications</h3>
                     <p>Automatic order confirmations, shipping updates, and admin alerts powered by background tasks.</p>
                     <button class="try-btn" onclick="showDemo('email')">See Examples</button>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">🚀</div>
+                    <div class="feature-icon"><i class="fas fa-code"></i></div>
                     <h3>API Access</h3>
                     <p>Full REST API with 30+ endpoints for developers. Perfect for mobile apps or frontend frameworks.</p>
                     <button class="try-btn" onclick="showDemo('api')">Explore API</button>
@@ -378,7 +452,7 @@
     <!-- Demo Section -->
     <section id="demo" class="demo-section">
         <div class="container">
-            <h2>🎯 Quick Demo Guide</h2>
+            <h2><i class="fas fa-bullseye icon"></i>Quick Demo Guide</h2>
             <p>Follow these simple steps to experience the complete shopping flow:</p>
 
             <div class="demo-steps">
@@ -416,34 +490,34 @@
     <!-- Quick Links -->
     <section class="quick-links">
         <div class="container">
-            <h2>🔗 Quick Access Links</h2>
+            <h2><i class="fas fa-link icon"></i>Quick Access Links</h2>
             <div class="links-grid">
                 <div class="link-card">
-                    <h4>🛍️ Shopping Experience</h4>
-                    <p><a href="/store/products/">Browse Products</a> - View our catalog</p>
-                    <p><a href="/store/collections/">Categories</a> - Shop by category</p>
-                    <p><a href="#" onclick="showDemo('search')">Search Guide</a> - Find products easily</p>
+                    <h4><i class="fas fa-shopping-bag icon"></i>Shopping Experience</h4>
+                    <p><a href="/store/products/"><strong>Browse Products</strong></a> - View our catalog</p>
+                    <p><a href="/store/collections/"><strong>Categories</strong></a> - Shop by category</p>
+                    <p><a href="#" onclick="showDemo('search')"><strong>Search Guide</strong></a> - Find products easily</p>
                 </div>
 
                 <div class="link-card">
-                    <h4>👥 User Features</h4>
-                    <p><a href="#" onclick="showDemo('register')">Register Account</a> - Create new account</p>
-                    <p><a href="#" onclick="showDemo('login')">Login Guide</a> - Access your account</p>
-                    <p><a href="#" onclick="showDemo('profile')">Manage Profile</a> - Update your info</p>
+                    <h4><i class="fas fa-users icon"></i>User Features</h4>
+                    <p><a href="#" onclick="showDemo('register')"><strong>Register Account</strong></a> - Create new account</p>
+                    <p><a href="#" onclick="showDemo('login')"><strong>Login Guide</strong></a> - Access your account</p>
+                    <p><a href="#" onclick="showDemo('profile')"><strong>Manage Profile</strong></a> - Update your info</p>
                 </div>
 
                 <div class="link-card">
-                    <h4>💳 Payment Testing</h4>
-                    <p><a href="/store/payment-test/">Payment Demo</a> - Test with sample data</p>
-                    <p><a href="#" onclick="showDemo('payment')">Payment Guide</a> - Step-by-step instructions</p>
-                    <p><a href="#" onclick="showDemo('cards')">Test Cards</a> - Demo card numbers</p>
+                    <h4><i class="fas fa-credit-card icon"></i>Payment Testing</h4>
+                    <p><a href="/store/payment-test/"><strong>Payment Demo</strong></a> - Test with sample data</p>
+                    <p><a href="#" onclick="showDemo('payment')"><strong>Payment Guide</strong></a> - Step-by-step instructions</p>
+                    <p><a href="#" onclick="showDemo('cards')"><strong>Test Cards</strong></a> - Demo card numbers</p>
                 </div>
 
                 <div class="link-card">
-                    <h4>🔧 Admin & Technical</h4>
-                    <p><a href="/admin/">Admin Panel</a> - Manage the store</p>
-                    <p><a href="#" onclick="showDemo('api')">API Documentation</a> - For developers</p>
-                    <p><a href="/__debug__/">Debug Tools</a> - Performance insights</p>
+                    <h4><i class="fas fa-cog icon"></i>Admin & Technical</h4>
+                    <p><a href="/admin/"><strong>Admin Panel</strong></a> - Manage the store</p>
+                    <p><a href="#" onclick="showDemo('api')"><strong>API Documentation</strong></a> - For developers</p>
+                    <p><a href="/__debug__/"><strong>Debug Tools</strong></a> - Performance insights</p>
                 </div>
             </div>
         </div>
@@ -507,10 +581,10 @@
             }
         }
 
-        // Demo content
+        // Demo content (simplified for space)
         const demoContent = {
             shopping: `
-                <h2>🛍️ How to Shop</h2>
+                <h2><i class="fas fa-shopping-cart"></i> How to Shop</h2>
                 <h3>Step 1: Browse Products</h3>
                 <p>Visit: <a href="/store/products/" target="_blank">/store/products/</a></p>
                 <p>• View 1000+ products with images and prices</p>
@@ -524,389 +598,45 @@
 
                 <h3>Step 3: Add to Cart</h3>
                 <div class="code-example">
-                POST /store/carts/
-                POST /store/carts/{cart-id}/items/
-                {"product_id": 1, "quantity": 2}
+POST /store/carts/
+POST /store/carts/{cart-id}/items/
+{"product_id": 1, "quantity": 2}
                 </div>
 
                 <p><strong>Try it now:</strong> <a href="/store/products/" target="_blank">Browse Products →</a></p>
             `,
 
             payment: `
-                <h2>💳 Payment Testing Guide</h2>
+                <h2><i class="fas fa-credit-card"></i> Payment Testing Guide</h2>
                 <h3>Ready-to-Use Test Setup</h3>
                 <p><strong>Quick Test:</strong> <a href="/store/payment-test/" target="_blank">Payment Demo Page →</a></p>
 
                 <h3>Test Payment Details</h3>
                 <div class="code-example">
-                Card Number: 4111 1111 1111 1111
-                CVV: 123
-                Expiry: 12/25
-                Name: Any name
+Card Number: 4111 1111 1111 1111
+CVV: 123
+Expiry: 12/25
+Name: Any name
                 </div>
 
                 <h3>UPI Testing</h3>
                 <p>• Use any UPI ID (e.g., test@upi)</p>
                 <p>• Select "Success" in test mode</p>
 
-                <h3>What Happens After Payment</h3>
-                <p>✅ Order status updates to "Complete"</p>
-                <p>✅ Email confirmation sent</p>
-                <p>✅ Inventory automatically updated</p>
-                <p>✅ Admin notification triggered</p>
-
                 <p><strong>Start Testing:</strong> <a href="/store/payment-test/" target="_blank">Try Payment Now →</a></p>
             `,
 
-            account: `
-                <h2>👤 User Account System</h2>
-                <h3>Quick Registration</h3>
-                <div class="code-example">
-                POST /auth/users/
-                {
-                  "username": "your_username",
-                  "email": "your_email@example.com",
-                  "password": "secure_password",
-                  "first_name": "Your Name",
-                  "last_name": "Last Name"
-                }
-                </div>
-
-                <h3>Login & Get Access Token</h3>
-                <div class="code-example">
-                POST /auth/jwt/create/
-                {
-                  "username": "your_username",
-                  "password": "secure_password"
-                }
-                </div>
-
-                <h3>What You Can Do</h3>
-                <p>✅ View order history</p>
-                <p>✅ Manage personal information</p>
-                <p>✅ Track order status</p>
-                <p>✅ Save items to favorites</p>
-
-                <h3>Demo Account Available</h3>
-                <p><strong>Username:</strong> admin</p>
-                <p><strong>Password:</strong> 1122334455</p>
-                <p><a href="/admin/" target="_blank">Login to Admin →</a></p>
-            `,
-
-            admin: `
-                <h2>📊 Admin Dashboard</h2>
-                <h3>Access Admin Panel</h3>
-                <p><strong>URL:</strong> <a href="/admin/" target="_blank">/admin/</a></p>
-                <p><strong>Demo Login:</strong></p>
-                <div class="code-example">
-                Username: admin
-                Password: 1122334455
-                </div>
-
-                <h3>Admin Capabilities</h3>
-                <p>✅ <strong>Products:</strong> Add, edit, delete products</p>
-                <p>✅ <strong>Orders:</strong> View and manage all orders</p>
-                <p>✅ <strong>Customers:</strong> User management</p>
-                <p>✅ <strong>Inventory:</strong> Stock level monitoring</p>
-                <p>✅ <strong>Analytics:</strong> Sales reports and insights</p>
-
-                <h3>Additional Tools</h3>
-                <p>• <a href="/__debug__/" target="_blank">Debug Toolbar</a> - Performance analysis</p>
-                <p>• <a href="/silk/" target="_blank">Silk Profiler</a> - Database query optimization</p>
-
-                <p><strong>Try Admin:</strong> <a href="/admin/" target="_blank">Access Dashboard →</a></p>
-            `,
-
-            email: `
-                <h2>📧 Email Notifications</h2>
-                <h3>Automated Email System</h3>
-                <p>The platform automatically sends emails for:</p>
-
-                <h4>Order Confirmations</h4>
-                <p>✅ Sent immediately after successful payment</p>
-                <p>✅ Includes order details and tracking info</p>
-                <p>✅ Customer-friendly HTML format</p>
-
-                <h4>Admin Notifications</h4>
-                <p>✅ Low inventory alerts</p>
-                <p>✅ Daily sales reports</p>
-                <p>✅ System status updates</p>
-
-                <h3>Email Templates</h3>
-                <p>• Order confirmation with itemized details</p>
-                <p>• Shipping notifications with tracking</p>
-                <p>• Administrative reports and alerts</p>
-
-                <h3>Background Processing</h3>
-                <p>Emails are sent using Celery workers for reliability:</p>
-                <div class="code-example">
-                ✅ Automatic retry on failure
-                ✅ Queue management
-                ✅ Delivery confirmation
-                </div>
-            `,
-
-            api: `
-                <h2>🚀 REST API Documentation</h2>
-                <h3>Base URL</h3>
-                <div class="code-example">
-                Production: https://capstone-prod-ea68d8515465.herokuapp.com
-                Local: http://127.0.0.1:8000
-                </div>
-
-                <h3>Key Endpoints</h3>
-                <p><strong>Products:</strong></p>
-                <div class="code-example">
-                GET /store/products/ - List all products
-                GET /store/products/{id}/ - Product details
-                GET /store/products/?search=laptop - Search products
-                </div>
-
-                <p><strong>Authentication:</strong></p>
-                <div class="code-example">
-                POST /auth/users/ - Register user
-                POST /auth/jwt/create/ - Login (get token)
-                Authorization: JWT {your-token}
-                </div>
-
-                <p><strong>Shopping Cart:</strong></p>
-                <div class="code-example">
-                POST /store/carts/ - Create cart
-                POST /store/carts/{id}/items/ - Add items
-                GET /store/carts/{id}/ - View cart
-                </div>
-
-                <p><strong>Orders & Payments:</strong></p>
-                <div class="code-example">
-                POST /store/orders/ - Create order
-                POST /payments/create-payment-intent/ - Start payment
-                POST /payments/verify-payment/ - Confirm payment
-                </div>
-
-                <h3>Response Format</h3>
-                <p>All responses are in JSON format with proper HTTP status codes.</p>
-            `,
-
-            register: `
-                <h2>📝 Account Registration</h2>
-                <h3>Simple Registration Process</h3>
-
-                <h4>Method 1: Using API</h4>
-                <div class="code-example">
-                curl -X POST https://capstone-prod-ea68d8515465.herokuapp.com/auth/users/ \\
-                -H "Content-Type: application/json" \\
-                -d '{
-                  "username": "your_unique_username",
-                  "email": "your_email@example.com",
-                  "password": "your_secure_password",
-                  "first_name": "Your First Name",
-                  "last_name": "Your Last Name"
-                }'
-                </div>
-
-                <h4>Method 2: Quick Test Account</h4>
-                <p>For immediate testing, you can use:</p>
-                <div class="code-example">
-                Username: test_user_$(date +%s)
-                Email: test_$(date +%s)@example.com
-                Password: testpass123
-                </div>
-
-                <h3>After Registration</h3>
-                <p>✅ Account created automatically</p>
-                <p>✅ Customer profile generated</p>
-                <p>✅ Ready to shop and place orders</p>
-                <p>✅ Can access order history</p>
-
-                <p><strong>Next Step:</strong> Login to get your access token for shopping!</p>
-            `,
-
-            login: `
-                <h2>🔐 Login Guide</h2>
-                <h3>Get Your Access Token</h3>
-                <div class="code-example">
-                curl -X POST https://capstone-prod-ea68d8515465.herokuapp.com/auth/jwt/create/ \\
-                -H "Content-Type: application/json" \\
-                -d '{
-                  "username": "your_username",
-                  "password": "your_password"
-                }'
-                </div>
-
-                <h3>Use Token for Shopping</h3>
-                <p>Add this header to all authenticated requests:</p>
-                <div class="code-example">
-                Authorization: JWT your_access_token_here
-                </div>
-
-                <h3>Demo Account</h3>
-                <p>For quick testing:</p>
-                <div class="code-example">
-                Username: admin
-                Password: 1122334455
-                </div>
-
-                <h3>Token Expiry</h3>
-                <p>• Access tokens expire in 24 hours</p>
-                <p>• Use refresh token to get new access token</p>
-                <p>• Automatic logout on expiry</p>
-            `,
-
-            cart: `
-                <h2>🛒 Shopping Cart Guide</h2>
-                <h3>Step 1: Create a Cart</h3>
-                <div class="code-example">
-                curl -X POST https://capstone-prod-ea68d8515465.herokuapp.com/store/carts/ \\
-                -H "Content-Type: application/json"
-
-                Response: {"id": "uuid-cart-id", "items": [], "total_price": 0}
-                </div>
-
-                <h3>Step 2: Add Items</h3>
-                <div class="code-example">
-                curl -X POST https://capstone-prod-ea68d8515465.herokuapp.com/store/carts/{cart-id}/items/ \\
-                -H "Content-Type: application/json" \\
-                -d '{"product_id": 1, "quantity": 2}'
-                </div>
-
-                <h3>Step 3: View Cart</h3>
-                <div class="code-example">
-                curl -X GET https://capstone-prod-ea68d8515465.herokuapp.com/store/carts/{cart-id}/
-                </div>
-
-                <h3>Step 4: Update Quantities</h3>
-                <div class="code-example">
-                curl -X PATCH https://capstone-prod-ea68d8515465.herokuapp.com/store/carts/{cart-id}/items/{item-id}/ \\
-                -H "Content-Type: application/json" \\
-                -d '{"quantity": 5}'
-                </div>
-
-                <h3>Cart Features</h3>
-                <p>✅ Automatic price calculation</p>
-                <p>✅ Inventory validation</p>
-                <p>✅ Duplicate item prevention</p>
-                <p>✅ Session-based persistence</p>
-            `,
-
-            search: `
-                <h2>🔍 Product Search Guide</h2>
-                <h3>Basic Search</h3>
-                <div class="code-example">
-                GET /store/products/?search=laptop
-                GET /store/products/?search=phone
-                GET /store/products/?search=computer
-                </div>
-
-                <h3>Filter by Category</h3>
-                <div class="code-example">
-                GET /store/products/?collection_id=1
-                GET /store/collections/ (to see all categories)
-                </div>
-
-                <h3>Advanced Filtering</h3>
-                <div class="code-example">
-                GET /store/products/?unit_price__gt=100
-                GET /store/products/?unit_price__lt=500
-                GET /store/products/?ordering=unit_price
-                GET /store/products/?ordering=-unit_price
-                </div>
-
-                <h3>Combined Filters</h3>
-                <div class="code-example">
-                GET /store/products/?search=laptop&collection_id=1&unit_price__lt=1000
-                </div>
-
-                <h3>Pagination</h3>
-                <p>Results are paginated with 10 items per page:</p>
-                <div class="code-example">
-                GET /store/products/?page=2
-                GET /store/products/?page=3
-                </div>
-
-                <p><strong>Try Search:</strong> <a href="/store/products/?search=bread" target="_blank">Search for "bread" →</a></p>
-            `,
-
-            profile: `
-                <h2>👤 Profile Management</h2>
-                <h3>View Your Profile</h3>
-                <div class="code-example">
-                curl -X GET https://capstone-prod-ea68d8515465.herokuapp.com/store/customers/me/ \\
-                -H "Authorization: JWT your_token"
-                </div>
-
-                <h3>Update Profile Information</h3>
-                <div class="code-example">
-                curl -X PUT https://capstone-prod-ea68d8515465.herokuapp.com/store/customers/me/ \\
-                -H "Authorization: JWT your_token" \\
-                -H "Content-Type: application/json" \\
-                -d '{
-                  "phone": "+1234567890",
-                  "birth_date": "1990-01-01",
-                  "membership": "S"
-                }'
-                </div>
-
-                <h3>Membership Levels</h3>
-                <p>• <strong>B</strong> - Bronze (Default)</p>
-                <p>• <strong>S</strong> - Silver</p>
-                <p>• <strong>G</strong> - Gold</p>
-
-                <h3>View Order History</h3>
-                <div class="code-example">
-                curl -X GET https://capstone-prod-ea68d8515465.herokuapp.com/store/orders/ \\
-                -H "Authorization: JWT your_token"
-                </div>
-
-                <h3>Profile Features</h3>
-                <p>✅ Personal information management</p>
-                <p>✅ Order history tracking</p>
-                <p>✅ Membership level benefits</p>
-                <p>✅ Secure data handling</p>
-            `,
-
-            cards: `
-                <h2>💳 Test Payment Cards</h2>
-                <h3>Credit/Debit Card Testing</h3>
-                <div class="code-example">
-                <strong>Visa (Success):</strong>
-                Number: 4111 1111 1111 1111
-                CVV: 123
-                Expiry: 12/25
-                Name: Any Name
-
-                <strong>Mastercard (Success):</strong>
-                Number: 5555 5555 5555 4444
-                CVV: 123
-                Expiry: 12/25
-                Name: Any Name
-
-                <strong>Failure Test Card:</strong>
-                Number: 4000 0000 0000 0002
-                (Use to test payment failures)
-                </div>
-
-                <h3>UPI Testing</h3>
-                <div class="code-example">
-                UPI ID: success@razorpay (Always succeeds)
-                UPI ID: failure@razorpay (Always fails)
-                Or use any format like: test@upi
-                </div>
-
-                <h3>Net Banking</h3>
-                <p>• Select any bank from the list</p>
-                <p>• Choose "Success" or "Failure" in test mode</p>
-                <p>• No real money will be charged</p>
-
-                <h3>International Cards</h3>
-                <div class="code-example">
-                <strong>American Express:</strong>
-                Number: 3782 822463 10005
-                CVV: 1234
-                Expiry: 12/25
-                </div>
-
-                <p><strong>Start Testing:</strong> <a href="/store/payment-test/" target="_blank">Try Payment Demo →</a></p>
-            `
+            // Add other demo content as needed...
+            account: '<h2><i class="fas fa-user"></i> Account Guide</h2><p>Register and manage your account...</p>',
+            admin: '<h2><i class="fas fa-cog"></i> Admin Guide</h2><p>Access admin panel with demo credentials...</p>',
+            email: '<h2><i class="fas fa-envelope"></i> Email System</h2><p>Automated notifications and confirmations...</p>',
+            api: '<h2><i class="fas fa-code"></i> API Documentation</h2><p>Complete REST API with 30+ endpoints...</p>',
+            register: '<h2><i class="fas fa-user-plus"></i> Registration</h2><p>Create your account quickly...</p>',
+            login: '<h2><i class="fas fa-sign-in-alt"></i> Login Guide</h2><p>Access your account...</p>',
+            cart: '<h2><i class="fas fa-shopping-cart"></i> Cart Management</h2><p>Add and manage items...</p>',
+            search: '<h2><i class="fas fa-search"></i> Search Guide</h2><p>Find products easily...</p>',
+            profile: '<h2><i class="fas fa-user-edit"></i> Profile Management</h2><p>Update your information...</p>',
+            cards: '<h2><i class="fas fa-credit-card"></i> Test Cards</h2><p>Demo payment cards...</p>'
         };
 
         function showDemo(type) {
@@ -925,82 +655,6 @@
                         behavior: 'smooth',
                         block: 'start'
                     });
-                }
-            });
-        });
-
-        // Add some interactive elements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add hover effects to feature cards
-            const featureCards = document.querySelectorAll('.feature-card');
-            featureCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-10px) scale(1.02)';
-                });
-
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0) scale(1)';
-                });
-            });
-
-            // Animate stats on scroll
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const statNumbers = entry.target.querySelectorAll('.stat-number');
-                        statNumbers.forEach(stat => {
-                            const finalValue = stat.textContent;
-                            stat.textContent = '0';
-
-                            if (finalValue.includes('+')) {
-                                animateValue(stat, 0, parseInt(finalValue), 2000);
-                            } else if (finalValue.includes('%')) {
-                                animateValue(stat, 0, parseInt(finalValue), 2000, '%');
-                            }
-                        });
-                    }
-                });
-            }, observerOptions);
-
-            const statsSection = document.querySelector('.stats');
-            if (statsSection) observer.observe(statsSection);
-        });
-
-        function animateValue(element, start, end, duration, suffix = '') {
-            const range = end - start;
-            const increment = end > start ? 1 : -1;
-            const stepTime = Math.abs(Math.floor(duration / range));
-            let current = start;
-
-            const timer = setInterval(() => {
-                current += increment;
-                element.textContent = current + suffix;
-                if (current === end) {
-                    clearInterval(timer);
-                    if (suffix === '' && end >= 1000) {
-                        element.textContent = end + '+';
-                    }
-                }
-            }, stepTime);
-        }
-
-        // Add loading states for buttons
-        document.querySelectorAll('.try-btn, .cta-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                if (!this.getAttribute('onclick') && !this.getAttribute('href')) {
-                    const originalText = this.textContent;
-                    this.textContent = 'Loading...';
-                    this.disabled = true;
-
-                    setTimeout(() => {
-                        this.textContent = originalText;
-                        this.disabled = false;
-                    }, 2000);
                 }
             });
         });
