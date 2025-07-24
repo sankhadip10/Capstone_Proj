@@ -1,13 +1,15 @@
+/* Enhanced styles for user-friendly interface */
 body {
-    background-color: #f7f9fc;
-    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
     margin: 0;
-    padding: 40px;
+    padding: 0;
+    line-height: 1.6;
 }
 
 .container {
-    max-width: 960px;
+    max-width: 1200px;
     margin: auto;
     background: #ffffff;
     padding: 30px 40px;
@@ -15,56 +17,178 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-    color: #2c3e50;
-    font-size: 2.5rem;
-    margin-bottom: 5px;
+/* Responsive design improvements */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .features-grid,
+    .demo-steps,
+    .links-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .hero h1 {
+        font-size: 2.5rem !important;
+    }
+    
+    .hero p {
+        font-size: 1.1rem !important;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-btn {
+        width: 80%;
+        text-align: center;
+    }
 }
 
-.subtitle {
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-    color: #555;
+/* Enhanced button styles */
+.try-btn:active,
+.cta-btn:active {
+    transform: scale(0.98);
 }
 
-h2 {
-    color: #34495e;
-    margin-top: 30px;
-    font-size: 1.4rem;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 6px;
+.try-btn:disabled,
+.cta-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
-ul {
-    list-style: none;
-    padding-left: 0;
+/* Modal improvements */
+.modal-content {
+    position: relative;
+    animation: modalSlideIn 0.3s ease-out;
 }
 
-ul li {
-    margin: 8px 0;
-    font-size: 1rem;
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
+/* Code example styling */
+.code-example {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    overflow-x: auto;
+    margin: 15px 0;
+    position: relative;
+}
+
+.code-example::before {
+    content: 'CODE';
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    background: #007bff;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* Enhanced link styling */
 a {
-    color: #2c7be5;
+    color: #007bff;
     text-decoration: none;
     font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 a:hover {
+    color: #0056b3;
     text-decoration: underline;
 }
 
-code {
-    background: #eef;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: monospace;
+/* Loading animations */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 
-footer {
-    margin-top: 40px;
-    font-size: 0.9rem;
-    color: #888;
-    text-align: center;
+.loading {
+    animation: pulse 1.5s infinite;
+}
+
+/* Accessibility improvements */
+.try-btn:focus,
+.cta-btn:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    .hero,
+    .modal,
+    .try-btn,
+    .cta-btn {
+        display: none;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .container {
+        box-shadow: none;
+        padding: 0;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .feature-card {
+        border: 2px solid #000;
+    }
+    
+    .cta-btn {
+        border: 2px solid #000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .modal-content {
+        background-color: #2c3e50;
+        color: white;
+    }
+    
+    .code-example {
+        background: #34495e;
+        border-color: #4a6fa5;
+        color: #ecf0f1;
+    }
 }

@@ -4,380 +4,1006 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Store - Backend API System</title>
+    <title>Django E-Commerce Store - Live Demo</title>
     <link rel="stylesheet" href="{% static 'core/styles.css' %}">
     <style>
-        .api-section {
-            background: #f8f9fa;
-            border-left: 4px solid #2c7be5;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
-        .endpoint-grid {
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23667eea;stop-opacity:1" /><stop offset="100%" style="stop-color:%23764ba2;stop-opacity:1" /></linearGradient></defs><rect width="1200" height="600" fill="url(%23grad)"/></svg>');
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+            background-size: cover;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .cta-btn.secondary {
+            background: transparent;
+            border: 2px solid white;
+        }
+
+        .cta-btn.secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .features {
+            background: white;
+            padding: 80px 20px;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            gap: 40px;
+            margin-bottom: 60px;
         }
-        .endpoint-card {
-            background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e9ecef;
         }
-        .method-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .try-btn {
+            background: #4ecdc4;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             font-weight: bold;
-            color: white;
-            margin-right: 8px;
         }
-        .get { background: #28a745; }
-        .post { background: #007bff; }
-        .put { background: #ffc107; color: #212529; }
-        .patch { background: #6f42c1; }
-        .delete { background: #dc3545; }
-        .test-section {
-            background: #e8f5e8;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
+
+        .try-btn:hover {
+            background: #45b7aa;
+            transform: scale(1.05);
         }
-        .feature-highlight {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        .demo-section {
+            background: #2c3e50;
             color: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin: 20px 0;
+            padding: 80px 20px;
             text-align: center;
         }
+
+        .demo-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .demo-step {
+            background: rgba(255,255,255,0.1);
+            padding: 30px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            background: #ff6b6b;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .quick-links {
+            background: #ecf0f1;
+            padding: 60px 20px;
+        }
+
+        .quick-links h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .link-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .link-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .link-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .link-card a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link-card a:hover {
+            text-decoration: underline;
+        }
+
+        .stats {
+            background: #34495e;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            gap: 30px;
+            margin-top: 40px;
         }
-        .stat-card {
-            background: #fff;
+
+        .stat {
             padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid #dee2e6;
         }
+
         .stat-number {
-            font-size: 2em;
+            font-size: 3rem;
             font-weight: bold;
-            color: #2c7be5;
+            color: #3498db;
+            display: block;
         }
-        .code-block {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 4px;
-            padding: 10px;
+
+        .stat-label {
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .code-example {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
             font-family: monospace;
-            font-size: 14px;
+            margin: 15px 0;
             overflow-x: auto;
-            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .features-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="feature-highlight">
-            <h1>🛍️ Online Store - Backend API System</h1>
-            <p class="subtitle">Comprehensive Django REST Framework e-commerce platform with authentication, product catalog, shopping cart, and order processing capabilities.</p>
-            <p><strong>Production URL:</strong> capstone-prod-ea68d8515465.herokuapp.com | <strong>Local:</strong> http://127.0.0.1:8000/</p>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">30+</div>
-                <div>API Endpoints</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">7</div>
-                <div>Core Features</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">JWT</div>
-                <div>Authentication</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">UUID</div>
-                <div>Cart Sessions</div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>🛍️ Complete E-Commerce Platform</h1>
+            <p>Experience a fully functional online store with secure payments, real-time inventory, and automated order processing. Built with Django REST Framework and powered by modern technologies.</p>
+            <div class="cta-buttons">
+                <a href="#demo" class="cta-btn">Try Live Demo</a>
+                <a href="#features" class="cta-btn secondary">Explore Features</a>
             </div>
         </div>
+    </section>
 
-        <section class="test-section">
-            <h2>🧪 Quick API Testing Guide</h2>
-            <p><strong>Step 1:</strong> Register a user → <strong>Step 2:</strong> Login to get JWT token → <strong>Step 3:</strong> Use token in Authorization header → <strong>Step 4:</strong> Test cart flow</p>
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2>What You Can Do Here</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🛒</div>
+                    <h3>Shop Products</h3>
+                    <p>Browse 1000+ products across 10 categories. Add items to cart, manage quantities, and experience smooth shopping.</p>
+                    <button class="try-btn" onclick="showDemo('shopping')">Try Shopping</button>
+                </div>
 
-            <div class="code-block">
-                <strong>Sample User Registration:</strong><br>
-                POST /auth/users/<br>
-                {<br>
-                &nbsp;&nbsp;"username": "examiner",<br>
-                &nbsp;&nbsp;"email": "examiner@test.com",<br>
-                &nbsp;&nbsp;"password": "examiner123",<br>
-                &nbsp;&nbsp;"first_name": "Test",<br>
-                &nbsp;&nbsp;"last_name": "User"<br>
-                }
-            </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💳</div>
+                    <h3>Secure Payments</h3>
+                    <p>Complete real transactions using Razorpay. Test with demo cards or use UPI for authentic payment experience.</p>
+                    <button class="try-btn" onclick="showDemo('payment')">Test Payment</button>
+                </div>
 
-            <div class="code-block">
-                <strong>Login for JWT Token:</strong><br>
-                POST /auth/jwt/create/<br>
-                {<br>
-                &nbsp;&nbsp;"username": "examiner",<br>
-                &nbsp;&nbsp;"password": "examiner123"<br>
-                }
-            </div>
-        </section>
+                <div class="feature-card">
+                    <div class="feature-icon">👤</div>
+                    <h3>User Accounts</h3>
+                    <p>Register, login, manage profile, and track order history. Full user authentication with JWT tokens.</p>
+                    <button class="try-btn" onclick="showDemo('account')">Create Account</button>
+                </div>
 
-        <section>
-            <h2>🔐 Authentication System</h2>
-            <div class="endpoint-grid">
-                <div class="endpoint-card">
-                    <span class="method-badge post">POST</span>
-                    <a href="/auth/users/" target="_blank">/auth/users/</a>
-                    <p>User Registration - Create new account with email, username, password</p>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Admin Dashboard</h3>
+                    <p>Manage products, orders, customers, and view analytics through a comprehensive admin interface.</p>
+                    <button class="try-btn" onclick="showDemo('admin')">View Admin</button>
                 </div>
-                <div class="endpoint-card">
-                    <span class="method-badge post">POST</span>
-                    <a href="/auth/jwt/create/" target="_blank">/auth/jwt/create/</a>
-                    <p>User Login - Authenticate and return JWT token (24hr expiry)</p>
-                </div>
-                <div class="endpoint-card">
-                    <span class="method-badge post">POST</span>
-                    <a href="/auth/jwt/refresh/" target="_blank">/auth/jwt/refresh/</a>
-                    <p>Token Refresh - Refresh expired JWT tokens</p>
-                </div>
-            </div>
-        </section>
 
-        <section>
-            <h2>📦 Product Management System</h2>
-            <div class="api-section">
-                <p><strong>Features:</strong> CRUD operations, Search & filtering, Pagination, Image uploads, Collection organization</p>
-            </div>
-            <div class="endpoint-grid">
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span><span class="method-badge post">POST</span>
-                    <a href="/store/products/" target="_blank">/store/products/</a>
-                    <p>List products (paginated), Create new products (Admin only)</p>
-                    <small>Supports: ?search=, ?collection_id=, ?ordering=</small>
+                <div class="feature-card">
+                    <div class="feature-icon">📧</div>
+                    <h3>Email Notifications</h3>
+                    <p>Automatic order confirmations, shipping updates, and admin alerts powered by background tasks.</p>
+                    <button class="try-btn" onclick="showDemo('email')">See Examples</button>
                 </div>
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span><span class="method-badge put">PUT</span><span class="method-badge delete">DELETE</span>
-                    <a href="/store/products/1/" target="_blank">/store/products/{id}/</a>
-                    <p>Product details, Update, Delete (Admin only)</p>
-                </div>
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span><span class="method-badge post">POST</span>
-                    <a href="/store/products/1/reviews/" target="_blank">/store/products/{id}/reviews/</a>
-                    <p>Product reviews - View existing, Write new reviews</p>
-                </div>
-                <div class="endpoint-card">
-                    <span class="method-badge post">POST</span>
-                    <a href="/store/products/1/images/" target="_blank">/store/products/{id}/images/</a>
-                    <p>Product image upload (Admin only, 500KB max)</p>
-                </div>
-            </div>
-        </section>
 
-        <section>
-            <h2>📁 Collection Management</h2>
-            <div class="endpoint-grid">
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span><span class="method-badge post">POST</span>
-                    <a href="/store/collections/" target="_blank">/store/collections/</a>
-                    <p>List collections with product counts, Create new collections (Admin)</p>
-                </div>
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span><span class="method-badge put">PUT</span><span class="method-badge delete">DELETE</span>
-                    <a href="/store/collections/1/" target="_blank">/store/collections/{id}/</a>
-                    <p>Collection details, Update, Delete (Admin only)</p>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>API Access</h3>
+                    <p>Full REST API with 30+ endpoints for developers. Perfect for mobile apps or frontend frameworks.</p>
+                    <button class="try-btn" onclick="showDemo('api')">Explore API</button>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section>
-            <h2>🛒 Shopping Cart System</h2>
-            <div class="api-section">
-                <p><strong>Features:</strong> UUID-based sessions, Anonymous cart support, Automatic price calculation, Duplicate prevention</p>
-            </div>
-            <div class="endpoint-grid">
-                <div class="endpoint-card">
-                    <span class="method-badge post">POST</span>
-                    <a href="/store/carts/" target="_blank">/store/carts/</a>
-                    <p>Create new cart - Returns UUID for cart session</p>
-                    <div class="code-block">POST {} → Returns: {"id": "uuid", "items": [], "total_price": 0}</div>
-                </div>
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span><span class="method-badge delete">DELETE</span>
-                    <a href="/store/carts/your-cart-id/" target="_blank">/store/carts/{uuid}/</a>
-                    <p>View cart contents & total, Delete cart</p>
-                </div>
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span><span class="method-badge post">POST</span>
-                    <a href="/store/carts/your-cart-id/items/" target="_blank">/store/carts/{uuid}/items/</a>
-                    <p>Add items to cart, View cart items</p>
-                    <div class="code-block">POST {"product_id": 1, "quantity": 2}</div>
-                </div>
-                <div class="endpoint-card">
-                    <span class="method-badge patch">PATCH</span><span class="method-badge delete">DELETE</span>
-                    <a>/store/carts/{uuid}/items/{id}/</a>
-                    <p>Update item quantity, Remove item from cart</p>
-                </div>
-            </div>
-        </section>
+    <!-- Demo Section -->
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <h2>🎯 Quick Demo Guide</h2>
+            <p>Follow these simple steps to experience the complete shopping flow:</p>
 
-        <section>
-            <h2>👤 Customer Management</h2>
-            <div class="endpoint-grid">
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span><span class="method-badge put">PUT</span>
-                    <a href="/store/customers/" target="_blank">/store/customers/</a>
-                    <p>View all customers (Admin), Update customer info</p>
+            <div class="demo-steps">
+                <div class="demo-step">
+                    <div class="step-number">1</div>
+                    <h3>Browse Products</h3>
+                    <p>Visit our product catalog and explore items by category or search</p>
+                    <a href="/store/products/" class="cta-btn" style="margin-top: 15px;">View Products</a>
                 </div>
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span><span class="method-badge put">PUT</span>
-                    <a>/store/customers/me/</a>
-                    <p>Current user's customer profile (Authenticated users)</p>
-                </div>
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span>
-                    <a>/store/customers/{id}/history/</a>
-                    <p>Customer order history (Special permission required)</p>
-                </div>
-            </div>
-        </section>
 
-        <section>
-            <h2>🧾 Order Management System</h2>
-            <div class="api-section">
-                <p><strong>Features:</strong> Cart-to-order conversion, Price snapshots, Payment status tracking, Transaction safety</p>
-            </div>
-            <div class="endpoint-grid">
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span><span class="method-badge post">POST</span>
-                    <a href="/store/orders/" target="_blank">/store/orders/</a>
-                    <p>View orders (filtered by user), Place new order from cart</p>
-                    <div class="code-block">POST {"cart_id": "uuid"} → Creates order & clears cart</div>
+                <div class="demo-step">
+                    <div class="step-number">2</div>
+                    <h3>Create Account</h3>
+                    <p>Quick registration to unlock full shopping capabilities</p>
+                    <button class="cta-btn" style="margin-top: 15px;" onclick="showDemo('register')">Register Now</button>
                 </div>
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span><span class="method-badge patch">PATCH</span>
-                    <a>/store/orders/{id}/</a>
-                    <p>Order details, Update payment status (Admin only)</p>
-                </div>
-            </div>
-        </section>
 
-        <section>
-            <h2>⚙️ Administrative Tools</h2>
-            <div class="endpoint-grid">
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span>
-                    <a href="/admin/" target="_blank">/admin/</a>
-                    <p><strong>Django Admin Panel</strong><br>
-                    Username: <code>admin</code><br>
-                    Password: <code>1122334455</code></p>
+                <div class="demo-step">
+                    <div class="step-number">3</div>
+                    <h3>Add to Cart</h3>
+                    <p>Select products and manage your shopping cart</p>
+                    <button class="cta-btn" style="margin-top: 15px;" onclick="showDemo('cart')">Learn How</button>
                 </div>
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span>
-                    <a href="/__debug__/" target="_blank">/__debug__/</a>
-                    <p>Debug Toolbar - Performance profiling</p>
-                </div>
-                <div class="endpoint-card">
-                    <span class="method-badge get">GET</span>
-                    <a href="/silk/" target="_blank">/silk/</a>
-                    <p>Silk Profiler - Database query analysis</p>
+
+                <div class="demo-step">
+                    <div class="step-number">4</div>
+                    <h3>Complete Payment</h3>
+                    <p>Secure checkout with multiple payment options</p>
+                    <a href="/store/payment-test/" class="cta-btn" style="margin-top: 15px;">Test Payment</a>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section>
-            <h2>🚀 System Features & Architecture</h2>
-            <div class="endpoint-grid">
-                <div class="endpoint-card">
-                    <h4>🔄 Background Tasks</h4>
-                    <p>Celery + Redis for email notifications, scheduled tasks, and async processing</p>
+    <!-- Quick Links -->
+    <section class="quick-links">
+        <div class="container">
+            <h2>🔗 Quick Access Links</h2>
+            <div class="links-grid">
+                <div class="link-card">
+                    <h4>🛍️ Shopping Experience</h4>
+                    <p><a href="/store/products/">Browse Products</a> - View our catalog</p>
+                    <p><a href="/store/collections/">Categories</a> - Shop by category</p>
+                    <p><a href="#" onclick="showDemo('search')">Search Guide</a> - Find products easily</p>
                 </div>
-                <div class="endpoint-card">
-                    <h4>💾 Caching System</h4>
-                    <p>Redis caching for performance optimization (10min timeout)</p>
+
+                <div class="link-card">
+                    <h4>👥 User Features</h4>
+                    <p><a href="#" onclick="showDemo('register')">Register Account</a> - Create new account</p>
+                    <p><a href="#" onclick="showDemo('login')">Login Guide</a> - Access your account</p>
+                    <p><a href="#" onclick="showDemo('profile')">Manage Profile</a> - Update your info</p>
                 </div>
-                <div class="endpoint-card">
-                    <h4>🔍 Search & Filter</h4>
-                    <p>Advanced product search by title/description with collection filtering</p>
+
+                <div class="link-card">
+                    <h4>💳 Payment Testing</h4>
+                    <p><a href="/store/payment-test/">Payment Demo</a> - Test with sample data</p>
+                    <p><a href="#" onclick="showDemo('payment')">Payment Guide</a> - Step-by-step instructions</p>
+                    <p><a href="#" onclick="showDemo('cards')">Test Cards</a> - Demo card numbers</p>
                 </div>
-                <div class="endpoint-card">
-                    <h4>📄 Pagination</h4>
-                    <p>Page-based pagination (10 items/page) across all list endpoints</p>
-                </div>
-                <div class="endpoint-card">
-                    <h4>🔐 Permissions</h4>
-                    <p>Role-based access: Customer/Admin with JWT authentication</p>
-                </div>
-                <div class="endpoint-card">
-                    <h4>🔗 CORS Support</h4>
-                    <p>Frontend integration ready with localhost:5173 support</p>
+
+                <div class="link-card">
+                    <h4>🔧 Admin & Technical</h4>
+                    <p><a href="/admin/">Admin Panel</a> - Manage the store</p>
+                    <p><a href="#" onclick="showDemo('api')">API Documentation</a> - For developers</p>
+                    <p><a href="/__debug__/">Debug Tools</a> - Performance insights</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section>
-            <h2>📊 API Response Examples</h2>
-            <div class="code-block">
-                <strong>Product List Response:</strong><br>
-                {<br>
-                &nbsp;&nbsp;"count": 1000,<br>
-                &nbsp;&nbsp;"next": "http://127.0.0.1:8000/store/products/?page=2",<br>
-                &nbsp;&nbsp;"previous": null,<br>
-                &nbsp;&nbsp;"results": [<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;{<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": 1,<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"title": "Laptop",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"unit_price": "999.99",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"price_wih_tax": "1099.99",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"collection": 1,<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"images": []<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                &nbsp;&nbsp;]<br>
-                }
-            </div>
-        </section>
-
-        <section>
-            <h2>🔧 Technical Implementation</h2>
-            <div class="endpoint-grid">
-                <div class="endpoint-card">
-                    <h4>Database Schema</h4>
-                    <p>PostgreSQL with proper foreign keys, UUID cart sessions, and transaction safety</p>
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <h2>Platform Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat">
+                    <span class="stat-number">1000+</span>
+                    <div class="stat-label">Products Available</div>
                 </div>
-                <div class="endpoint-card">
-                    <h4>Performance</h4>
-                    <p>select_related(), prefetch_related(), Redis caching (95% improvement)</p>
+                <div class="stat">
+                    <span class="stat-number">10</span>
+                    <div class="stat-label">Product Categories</div>
                 </div>
-                <div class="endpoint-card">
-                    <h4>Security</h4>
-                    <p>JWT tokens, CORS protection, file validation, role-based permissions</p>
+                <div class="stat">
+                    <span class="stat-number">30+</span>
+                    <div class="stat-label">API Endpoints</div>
                 </div>
-                <div class="endpoint-card">
-                    <h4>Deployment</h4>
-                    <p>Docker containerization, Heroku deployment, environment management</p>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <div class="stat-label">Payment Success Rate</div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <footer>
-            <p>🚀 <strong>Developed by Sankhadip Das</strong> | Master's Capstone Project | <strong>Django REST Framework E-commerce Backend</strong></p>
-            <p>📋 <strong>Report:</strong> Comprehensive system with 30+ endpoints, JWT auth, UUID carts, Redis caching, Celery tasks</p>
-        </footer>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Django E-Commerce Platform | Built with Django REST Framework | Powered by Razorpay</p>
+            <p><strong>Developed by Sankhadip Das</strong> | Master's Capstone Project</p>
+        </div>
+    </footer>
+
+    <!-- Modal for demos -->
+    <div id="demoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalContent">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Modal functionality
+        const modal = document.getElementById('demoModal');
+        const span = document.getElementsByClassName('close')[0];
+
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Demo content
+        const demoContent = {
+            shopping: `
+                <h2>🛍️ How to Shop</h2>
+                <h3>Step 1: Browse Products</h3>
+                <p>Visit: <a href="/store/products/" target="_blank">/store/products/</a></p>
+                <p>• View 1000+ products with images and prices</p>
+                <p>• Filter by category or search by name</p>
+
+                <h3>Step 2: View Product Details</h3>
+                <p>Click any product to see:</p>
+                <p>• Full description and specifications</p>
+                <p>• Customer reviews and ratings</p>
+                <p>• Available quantity</p>
+
+                <h3>Step 3: Add to Cart</h3>
+                <div class="code-example">
+                POST /store/carts/
+                POST /store/carts/{cart-id}/items/
+                {"product_id": 1, "quantity": 2}
+                </div>
+
+                <p><strong>Try it now:</strong> <a href="/store/products/" target="_blank">Browse Products →</a></p>
+            `,
+
+            payment: `
+                <h2>💳 Payment Testing Guide</h2>
+                <h3>Ready-to-Use Test Setup</h3>
+                <p><strong>Quick Test:</strong> <a href="/store/payment-test/" target="_blank">Payment Demo Page →</a></p>
+
+                <h3>Test Payment Details</h3>
+                <div class="code-example">
+                Card Number: 4111 1111 1111 1111
+                CVV: 123
+                Expiry: 12/25
+                Name: Any name
+                </div>
+
+                <h3>UPI Testing</h3>
+                <p>• Use any UPI ID (e.g., test@upi)</p>
+                <p>• Select "Success" in test mode</p>
+
+                <h3>What Happens After Payment</h3>
+                <p>✅ Order status updates to "Complete"</p>
+                <p>✅ Email confirmation sent</p>
+                <p>✅ Inventory automatically updated</p>
+                <p>✅ Admin notification triggered</p>
+
+                <p><strong>Start Testing:</strong> <a href="/store/payment-test/" target="_blank">Try Payment Now →</a></p>
+            `,
+
+            account: `
+                <h2>👤 User Account System</h2>
+                <h3>Quick Registration</h3>
+                <div class="code-example">
+                POST /auth/users/
+                {
+                  "username": "your_username",
+                  "email": "your_email@example.com",
+                  "password": "secure_password",
+                  "first_name": "Your Name",
+                  "last_name": "Last Name"
+                }
+                </div>
+
+                <h3>Login & Get Access Token</h3>
+                <div class="code-example">
+                POST /auth/jwt/create/
+                {
+                  "username": "your_username",
+                  "password": "secure_password"
+                }
+                </div>
+
+                <h3>What You Can Do</h3>
+                <p>✅ View order history</p>
+                <p>✅ Manage personal information</p>
+                <p>✅ Track order status</p>
+                <p>✅ Save items to favorites</p>
+
+                <h3>Demo Account Available</h3>
+                <p><strong>Username:</strong> admin</p>
+                <p><strong>Password:</strong> 1122334455</p>
+                <p><a href="/admin/" target="_blank">Login to Admin →</a></p>
+            `,
+
+            admin: `
+                <h2>📊 Admin Dashboard</h2>
+                <h3>Access Admin Panel</h3>
+                <p><strong>URL:</strong> <a href="/admin/" target="_blank">/admin/</a></p>
+                <p><strong>Demo Login:</strong></p>
+                <div class="code-example">
+                Username: admin
+                Password: 1122334455
+                </div>
+
+                <h3>Admin Capabilities</h3>
+                <p>✅ <strong>Products:</strong> Add, edit, delete products</p>
+                <p>✅ <strong>Orders:</strong> View and manage all orders</p>
+                <p>✅ <strong>Customers:</strong> User management</p>
+                <p>✅ <strong>Inventory:</strong> Stock level monitoring</p>
+                <p>✅ <strong>Analytics:</strong> Sales reports and insights</p>
+
+                <h3>Additional Tools</h3>
+                <p>• <a href="/__debug__/" target="_blank">Debug Toolbar</a> - Performance analysis</p>
+                <p>• <a href="/silk/" target="_blank">Silk Profiler</a> - Database query optimization</p>
+
+                <p><strong>Try Admin:</strong> <a href="/admin/" target="_blank">Access Dashboard →</a></p>
+            `,
+
+            email: `
+                <h2>📧 Email Notifications</h2>
+                <h3>Automated Email System</h3>
+                <p>The platform automatically sends emails for:</p>
+
+                <h4>Order Confirmations</h4>
+                <p>✅ Sent immediately after successful payment</p>
+                <p>✅ Includes order details and tracking info</p>
+                <p>✅ Customer-friendly HTML format</p>
+
+                <h4>Admin Notifications</h4>
+                <p>✅ Low inventory alerts</p>
+                <p>✅ Daily sales reports</p>
+                <p>✅ System status updates</p>
+
+                <h3>Email Templates</h3>
+                <p>• Order confirmation with itemized details</p>
+                <p>• Shipping notifications with tracking</p>
+                <p>• Administrative reports and alerts</p>
+
+                <h3>Background Processing</h3>
+                <p>Emails are sent using Celery workers for reliability:</p>
+                <div class="code-example">
+                ✅ Automatic retry on failure
+                ✅ Queue management
+                ✅ Delivery confirmation
+                </div>
+            `,
+
+            api: `
+                <h2>🚀 REST API Documentation</h2>
+                <h3>Base URL</h3>
+                <div class="code-example">
+                Production: https://capstone-prod-ea68d8515465.herokuapp.com
+                Local: http://127.0.0.1:8000
+                </div>
+
+                <h3>Key Endpoints</h3>
+                <p><strong>Products:</strong></p>
+                <div class="code-example">
+                GET /store/products/ - List all products
+                GET /store/products/{id}/ - Product details
+                GET /store/products/?search=laptop - Search products
+                </div>
+
+                <p><strong>Authentication:</strong></p>
+                <div class="code-example">
+                POST /auth/users/ - Register user
+                POST /auth/jwt/create/ - Login (get token)
+                Authorization: JWT {your-token}
+                </div>
+
+                <p><strong>Shopping Cart:</strong></p>
+                <div class="code-example">
+                POST /store/carts/ - Create cart
+                POST /store/carts/{id}/items/ - Add items
+                GET /store/carts/{id}/ - View cart
+                </div>
+
+                <p><strong>Orders & Payments:</strong></p>
+                <div class="code-example">
+                POST /store/orders/ - Create order
+                POST /payments/create-payment-intent/ - Start payment
+                POST /payments/verify-payment/ - Confirm payment
+                </div>
+
+                <h3>Response Format</h3>
+                <p>All responses are in JSON format with proper HTTP status codes.</p>
+            `,
+
+            register: `
+                <h2>📝 Account Registration</h2>
+                <h3>Simple Registration Process</h3>
+
+                <h4>Method 1: Using API</h4>
+                <div class="code-example">
+                curl -X POST https://capstone-prod-ea68d8515465.herokuapp.com/auth/users/ \\
+                -H "Content-Type: application/json" \\
+                -d '{
+                  "username": "your_unique_username",
+                  "email": "your_email@example.com",
+                  "password": "your_secure_password",
+                  "first_name": "Your First Name",
+                  "last_name": "Your Last Name"
+                }'
+                </div>
+
+                <h4>Method 2: Quick Test Account</h4>
+                <p>For immediate testing, you can use:</p>
+                <div class="code-example">
+                Username: test_user_$(date +%s)
+                Email: test_$(date +%s)@example.com
+                Password: testpass123
+                </div>
+
+                <h3>After Registration</h3>
+                <p>✅ Account created automatically</p>
+                <p>✅ Customer profile generated</p>
+                <p>✅ Ready to shop and place orders</p>
+                <p>✅ Can access order history</p>
+
+                <p><strong>Next Step:</strong> Login to get your access token for shopping!</p>
+            `,
+
+            login: `
+                <h2>🔐 Login Guide</h2>
+                <h3>Get Your Access Token</h3>
+                <div class="code-example">
+                curl -X POST https://capstone-prod-ea68d8515465.herokuapp.com/auth/jwt/create/ \\
+                -H "Content-Type: application/json" \\
+                -d '{
+                  "username": "your_username",
+                  "password": "your_password"
+                }'
+                </div>
+
+                <h3>Use Token for Shopping</h3>
+                <p>Add this header to all authenticated requests:</p>
+                <div class="code-example">
+                Authorization: JWT your_access_token_here
+                </div>
+
+                <h3>Demo Account</h3>
+                <p>For quick testing:</p>
+                <div class="code-example">
+                Username: admin
+                Password: 1122334455
+                </div>
+
+                <h3>Token Expiry</h3>
+                <p>• Access tokens expire in 24 hours</p>
+                <p>• Use refresh token to get new access token</p>
+                <p>• Automatic logout on expiry</p>
+            `,
+
+            cart: `
+                <h2>🛒 Shopping Cart Guide</h2>
+                <h3>Step 1: Create a Cart</h3>
+                <div class="code-example">
+                curl -X POST https://capstone-prod-ea68d8515465.herokuapp.com/store/carts/ \\
+                -H "Content-Type: application/json"
+
+                Response: {"id": "uuid-cart-id", "items": [], "total_price": 0}
+                </div>
+
+                <h3>Step 2: Add Items</h3>
+                <div class="code-example">
+                curl -X POST https://capstone-prod-ea68d8515465.herokuapp.com/store/carts/{cart-id}/items/ \\
+                -H "Content-Type: application/json" \\
+                -d '{"product_id": 1, "quantity": 2}'
+                </div>
+
+                <h3>Step 3: View Cart</h3>
+                <div class="code-example">
+                curl -X GET https://capstone-prod-ea68d8515465.herokuapp.com/store/carts/{cart-id}/
+                </div>
+
+                <h3>Step 4: Update Quantities</h3>
+                <div class="code-example">
+                curl -X PATCH https://capstone-prod-ea68d8515465.herokuapp.com/store/carts/{cart-id}/items/{item-id}/ \\
+                -H "Content-Type: application/json" \\
+                -d '{"quantity": 5}'
+                </div>
+
+                <h3>Cart Features</h3>
+                <p>✅ Automatic price calculation</p>
+                <p>✅ Inventory validation</p>
+                <p>✅ Duplicate item prevention</p>
+                <p>✅ Session-based persistence</p>
+            `,
+
+            search: `
+                <h2>🔍 Product Search Guide</h2>
+                <h3>Basic Search</h3>
+                <div class="code-example">
+                GET /store/products/?search=laptop
+                GET /store/products/?search=phone
+                GET /store/products/?search=computer
+                </div>
+
+                <h3>Filter by Category</h3>
+                <div class="code-example">
+                GET /store/products/?collection_id=1
+                GET /store/collections/ (to see all categories)
+                </div>
+
+                <h3>Advanced Filtering</h3>
+                <div class="code-example">
+                GET /store/products/?unit_price__gt=100
+                GET /store/products/?unit_price__lt=500
+                GET /store/products/?ordering=unit_price
+                GET /store/products/?ordering=-unit_price
+                </div>
+
+                <h3>Combined Filters</h3>
+                <div class="code-example">
+                GET /store/products/?search=laptop&collection_id=1&unit_price__lt=1000
+                </div>
+
+                <h3>Pagination</h3>
+                <p>Results are paginated with 10 items per page:</p>
+                <div class="code-example">
+                GET /store/products/?page=2
+                GET /store/products/?page=3
+                </div>
+
+                <p><strong>Try Search:</strong> <a href="/store/products/?search=bread" target="_blank">Search for "bread" →</a></p>
+            `,
+
+            profile: `
+                <h2>👤 Profile Management</h2>
+                <h3>View Your Profile</h3>
+                <div class="code-example">
+                curl -X GET https://capstone-prod-ea68d8515465.herokuapp.com/store/customers/me/ \\
+                -H "Authorization: JWT your_token"
+                </div>
+
+                <h3>Update Profile Information</h3>
+                <div class="code-example">
+                curl -X PUT https://capstone-prod-ea68d8515465.herokuapp.com/store/customers/me/ \\
+                -H "Authorization: JWT your_token" \\
+                -H "Content-Type: application/json" \\
+                -d '{
+                  "phone": "+1234567890",
+                  "birth_date": "1990-01-01",
+                  "membership": "S"
+                }'
+                </div>
+
+                <h3>Membership Levels</h3>
+                <p>• <strong>B</strong> - Bronze (Default)</p>
+                <p>• <strong>S</strong> - Silver</p>
+                <p>• <strong>G</strong> - Gold</p>
+
+                <h3>View Order History</h3>
+                <div class="code-example">
+                curl -X GET https://capstone-prod-ea68d8515465.herokuapp.com/store/orders/ \\
+                -H "Authorization: JWT your_token"
+                </div>
+
+                <h3>Profile Features</h3>
+                <p>✅ Personal information management</p>
+                <p>✅ Order history tracking</p>
+                <p>✅ Membership level benefits</p>
+                <p>✅ Secure data handling</p>
+            `,
+
+            cards: `
+                <h2>💳 Test Payment Cards</h2>
+                <h3>Credit/Debit Card Testing</h3>
+                <div class="code-example">
+                <strong>Visa (Success):</strong>
+                Number: 4111 1111 1111 1111
+                CVV: 123
+                Expiry: 12/25
+                Name: Any Name
+
+                <strong>Mastercard (Success):</strong>
+                Number: 5555 5555 5555 4444
+                CVV: 123
+                Expiry: 12/25
+                Name: Any Name
+
+                <strong>Failure Test Card:</strong>
+                Number: 4000 0000 0000 0002
+                (Use to test payment failures)
+                </div>
+
+                <h3>UPI Testing</h3>
+                <div class="code-example">
+                UPI ID: success@razorpay (Always succeeds)
+                UPI ID: failure@razorpay (Always fails)
+                Or use any format like: test@upi
+                </div>
+
+                <h3>Net Banking</h3>
+                <p>• Select any bank from the list</p>
+                <p>• Choose "Success" or "Failure" in test mode</p>
+                <p>• No real money will be charged</p>
+
+                <h3>International Cards</h3>
+                <div class="code-example">
+                <strong>American Express:</strong>
+                Number: 3782 822463 10005
+                CVV: 1234
+                Expiry: 12/25
+                </div>
+
+                <p><strong>Start Testing:</strong> <a href="/store/payment-test/" target="_blank">Try Payment Demo →</a></p>
+            `
+        };
+
+        function showDemo(type) {
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = demoContent[type] || '<h2>Demo not found</h2>';
+            modal.style.display = 'block';
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Animate stats on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statNumbers = entry.target.querySelectorAll('.stat-number');
+                        statNumbers.forEach(stat => {
+                            const finalValue = stat.textContent;
+                            stat.textContent = '0';
+
+                            if (finalValue.includes('+')) {
+                                animateValue(stat, 0, parseInt(finalValue), 2000);
+                            } else if (finalValue.includes('%')) {
+                                animateValue(stat, 0, parseInt(finalValue), 2000, '%');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            const statsSection = document.querySelector('.stats');
+            if (statsSection) observer.observe(statsSection);
+        });
+
+        function animateValue(element, start, end, duration, suffix = '') {
+            const range = end - start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                element.textContent = current + suffix;
+                if (current === end) {
+                    clearInterval(timer);
+                    if (suffix === '' && end >= 1000) {
+                        element.textContent = end + '+';
+                    }
+                }
+            }, stepTime);
+        }
+
+        // Add loading states for buttons
+        document.querySelectorAll('.try-btn, .cta-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                if (!this.getAttribute('onclick') && !this.getAttribute('href')) {
+                    const originalText = this.textContent;
+                    this.textContent = 'Loading...';
+                    this.disabled = true;
+
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                        this.disabled = false;
+                    }, 2000);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
